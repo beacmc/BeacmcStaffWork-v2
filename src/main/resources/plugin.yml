@@ -1,0 +1,24 @@
+name: BeacmcStaffWork
+version: '${project.version}'
+main: com.beacmc.beacmcstaffwork.BeacmcStaffWork
+api-version: 1.16
+softdepend:
+  - AdvancedBan
+  - LiteBans
+  - LuckPerms
+  - PlaceholderAPI
+author: beacmc
+commands:
+  staffchat:
+    aliases:
+      - sc
+      - schat
+  staffwork:
+    aliases:
+      - sw
+      - staffw
+      - swork
+  staffworkadmin:
+    aliases:
+      - swa
+      - sworkadmin

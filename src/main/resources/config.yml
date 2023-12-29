@@ -1,0 +1,178 @@
+settings:
+  # технисческая поддержка тут:
+  # https://discord.gg/QSAdaTJuET
+
+  prefix: "#FF8600&lʙ#FF8A00&lᴇ#FF8E00&lᴀ#FF9200&lᴄ#FF9500&lᴍ#FF9900&lᴄ#FF9D00&ls#FFA100&lᴛ#FFA500&lᴀ#FFA900&lғ#FFAD00&lғ#FFB100&lᴡ#FFB400&lᴏ#FFB800&lʀ#FFBC00&lᴋ #FFC000&l▸&7"
+
+  # информирование об обновлении плагина.
+  update-check: true
+
+  chat-format: "&#ff8600&ls&#ff8d00&lᴛ&#ff9400&lᴀ&#ff9a00&lғ&#ffa100&lғ&#ffa800&lᴄ&#ffaf00&lʜ&#ffb500&lᴀ&#ffbc00&lᴛ #FFC000&l▸&7 %luckperms_prefix% &6%player_name% %luckperms_suffix% &8> &f{MESSAGE}"
+
+  data:
+    type: sqlite
+    host: localhost:3306
+    database: beacmcstaffwork
+    username: "beacmc"
+    password: "VeryHardPassword123"
+
+
+  discord:
+
+    # Если установлено значение true, то строка
+    # token, channel-id, guild-id не может быть пустой!
+    enable: false
+
+    # ссылка на вебхук
+    webhook-url: ""
+
+    # есть поддержка PlaceholderAPI
+    on-enable-work:
+      title: "%geolocation_city% | %geolocation_country%"
+      title-url: ""
+      author-name: "%player_name%"
+      author-icon-url: ""
+      image-url: ""
+      description: |
+        Начал свою работу
+
+      color: "FFBB00"
+
+    # есть поддержка PlaceholderAPI
+    on-disable-work:
+      title: "%geolocation_city% | %geolocation_country%"
+      title-url: ""
+      author-name: "%player_name%"
+      author-icon-url: ""
+      image-url: ""
+      description: |
+        Закончил свою работу
+      color: "FFBB00"
+
+
+  # поддержка PlaceholderAPI
+  placeholderapi:
+
+    # Заполнители:
+    #
+    # %beacmcstaffwork_player_work% - выведит сообщение
+    # которое скажет, находится ли модератор на работе
+    #
+    # %beacmcstaffwork_moderators_on_work% - выведит количевство
+    # модераторов находащихся в режиме работы
+    #
+    # %beacmcstaffwork_time_in_work% - выведит количевство дней, часов,
+    # минут и секунд сколько модератор находился в режиме работы
+    #
+    # %becmcstaffwork_bans% - выводит все баны модератора (выданные в режиме работы)
+    #
+    # %becmcstaffwork_mutes% - выводит все муты модератора (выданные в режиме работы)
+    #
+    # %becmcstaffwork_kicks% - выводит все кики модератора (выданные в режиме работы)
+
+    # настройка заполнителей
+    placeholders:
+      on-work: "&aНа работе"
+      not-work: "&cНе на работе"
+
+      # формат заполнителя %beacmcstaffwork_time_in_work%
+      time-in-work: "&6{days} &7дней &6{hours} &7часов &6{minutes} &7минут &6{seconds} &7секунд"
+
+  # Поддержка PlaceholderAPI
+  #
+  # Список триггеров (action)
+  # [console] - отправка команд от имени консоли
+  # [player] - отправка команд от имени модератора
+  #
+  # [message_to_moderators] - отошлёт сообщение всем модераторам у которых
+  # есть право beacmcstaffwork.view
+  #
+  # [broadcast] - отправить сообщение всем онлайн игрокам
+  #
+  # [sound] - отправить звук модератору. Список звуков:
+  # https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html
+
+  actions:
+    # ПРИМЕЧАНИЕ: групп может быть сколько угодно!
+
+    groups-on-work:
+      example_group: # тут название вашей группы
+        - '[console] lp user %player_name% parent add moder'
+        - '[broadcast] %player_name% начал работу!'
+      helper:
+        - '[console] lp user %player_name% meta setsuffix " onWork"'
+        - '[message_to_moderators] &7Модератор &6%player_name% &7начал работу.'
+    groups-off-work:
+      example_group:
+        - '[console] lp user %player_name% parent remove moderator'
+        - '[broadcast] %player_name% закончил работу!'
+        -
+      helper:
+        - '[console] lp user %player_name% meta clear'
+        - '[message_to_moderators] &7Модератор &6%player_name% &7окончил работу.'
+
+  work:
+
+    # блокировать ломание блоков во время работы
+    disable-break-block: true
+
+    # блокирование установки блоков во время работы
+    disable-place-block: true
+
+    # блокирование наносение урона игроку
+    disable-entity-damage: true
+
+
+
+  # все сообщения плагина
+  messages:
+    no-permission: "{PREFIX} &7Недостаточно полномочий для использования этой команды"
+    reload: "{PREFIX} &7Конфигурация перезагружена"
+    error-use: "{PREFIX} &7неверное использование команды"
+    already-worked: "{PREFIX} &7Вы уже находитесь в режиме работы"
+    not-worked: "{PREFIX} &7Вы не находитесь в режиме работы"
+    on-enable-work: "{PREFIX} &7Режим работы успешно начат"
+    on-disable-work: "{PREFIX} &7Режим работы успешно окончен"
+    no-group: "{PREFIX} &7Настройка для Вашей группы остуствует. Обратитесь к администрации"
+    block-place-on-work: "{PREFIX} &7Во время режима работы запрещено ставить блоки"
+    block-break-on-work: "{PREFIX} &7Во время режима работы запрещено ломать блоки"
+    entity-damage-on-work: "{PREFIX} &7Во время режима работы запрещено наносить урон"
+    damager-damage-on-work: "{PREFIX} &7Этот игрок находится в режиме работы."
+    help:
+      - " "
+      - "#FF8600/sw on &7- &fначать работу"
+      - "#FF8600/sw off &7- &fокончить работу работу"
+      - ""
+      - "#FF8600/swa reload &7- &fперезапустить плагин"
+      - "  "
+
+    # отошлёт игроку об обновлении плагина, если у него
+    # есть право beacmcstaffwork.update
+    update-check-player:
+      - " "
+      - "   #FF8600&lʙᴇᴀᴄᴍᴄsᴛᴀғғᴡᴏʀᴋ "
+      - "   #FF8600&l&m     "
+      - "   #FF8600▶ &7вышло новое обновление плагина"
+      - "   &7текущая версия: #FF8600{current_version}"
+      - "   &7самая новая версия: #FF8600{latest_version}"
+      - " "
+
+    update-check-console:
+      - " "
+      - "   #FF8600&lʙᴇᴀᴄᴍᴄsᴛᴀғғᴡᴏʀᴋ "
+      - "   #FF8600&l&m     "
+      - "   #FF8600▶ &7вышло новое обновление плагина"
+      - "   &7текущая версия: #FF8600{current_version}"
+      - "   &7самая новая версия: #FF8600{latest_version}"
+      - " "
+
+
+  # тайтлы для игроков
+  titles:
+    on-enable-work:
+      title: "#FF8600&lʙ#FF8A00&lᴇ#FF8E00&lᴀ#FF9200&lᴄ#FF9500&lᴍ#FF9900&lᴄ#FF9D00&ls#FFA100&lᴛ#FFA500&lᴀ#FFA900&lғ#FFAD00&lғ#FFB100&lᴡ#FFB400&lᴏ#FFB800&lʀ#FFBC00&lᴋ"
+      subtitle: "&7работа успешно начата"
+    on-disable-work:
+      title: "#FF8600&lʙ#FF8A00&lᴇ#FF8E00&lᴀ#FF9200&lᴄ#FF9500&lᴍ#FF9900&lᴄ#FF9D00&ls#FFA100&lᴛ#FFA500&lᴀ#FFA900&lғ#FFAD00&lғ#FFB100&lᴡ#FFB400&lᴏ#FFB800&lʀ#FFBC00&lᴋ"
+      subtitle: "&7работа успешно окончена"
+
