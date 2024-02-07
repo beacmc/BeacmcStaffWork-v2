@@ -13,21 +13,21 @@ public class ABListener implements Listener {
     @EventHandler
     public void onPunish(PunishmentEvent event) {
         AdvancedBanHandler handler = new AdvancedBanHandler(event.getPunishment());
+        User user = new User(Bukkit.getPlayer(handler.getExecutor()));
 
-        Data data = new Data(new User(Bukkit.getPlayer(handler.getExecutor())));
         handler.start();
 
         switch (handler.getType()) {
             case "ban": {
-                data.addBan();
+                Data.addBan(user);
                 break;
             }
             case "kick": {
-                data.addKick();
+                Data.addKick(user);
                 break;
             }
             case "mute": {
-                data.addMute();
+                Data.addMute(user);
                 break;
             }
         }

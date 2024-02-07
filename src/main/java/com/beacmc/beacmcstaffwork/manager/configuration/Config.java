@@ -1,4 +1,4 @@
-package com.beacmc.beacmcstaffwork.manager;
+package com.beacmc.beacmcstaffwork.manager.configuration;
 
 
 import com.beacmc.beacmcstaffwork.BeacmcStaffWork;
@@ -20,6 +20,10 @@ public class Config {
     public static List<String> getStringList(String path) {
         assert BeacmcStaffWork.getInstance().getConfig().getStringList(path) != null;
         return BeacmcStaffWork.getInstance().getConfig().getStringList(path);
+    }
+
+    public static Integer getInteger(String path) {
+        return BeacmcStaffWork.getInstance().getConfig().getInt(path);
     }
 
     public static int getInt(String path) {

@@ -2,9 +2,9 @@ package com.beacmc.beacmcstaffwork.data;
 
 import com.beacmc.beacmcstaffwork.BeacmcStaffWork;
 import com.beacmc.beacmcstaffwork.manager.Color;
-import com.beacmc.beacmcstaffwork.manager.Config;
 import com.beacmc.beacmcstaffwork.manager.User;
 import com.beacmc.beacmcstaffwork.manager.Work;
+import com.beacmc.beacmcstaffwork.manager.configuration.Config;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;

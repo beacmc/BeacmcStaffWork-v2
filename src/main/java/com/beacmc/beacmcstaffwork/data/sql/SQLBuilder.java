@@ -1,7 +1,7 @@
 package com.beacmc.beacmcstaffwork.data.sql;
 
 import com.beacmc.beacmcstaffwork.BeacmcStaffWork;
-import com.beacmc.beacmcstaffwork.manager.Config;
+import com.beacmc.beacmcstaffwork.manager.configuration.Config;
 import org.bukkit.Bukkit;
 
 import java.sql.Connection;

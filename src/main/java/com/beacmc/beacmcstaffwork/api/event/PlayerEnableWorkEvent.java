@@ -1,4 +1,4 @@
-package com.beacmc.beacmcstaffwork.api.events;
+package com.beacmc.beacmcstaffwork.api.event;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;

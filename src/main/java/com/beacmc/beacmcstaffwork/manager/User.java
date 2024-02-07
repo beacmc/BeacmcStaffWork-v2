@@ -2,6 +2,7 @@ package com.beacmc.beacmcstaffwork.manager;
 
 import com.beacmc.beacmcstaffwork.BeacmcStaffWork;
 import com.beacmc.beacmcstaffwork.data.sql.SQLBuilder;
+import com.beacmc.beacmcstaffwork.manager.configuration.Config;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -89,17 +90,19 @@ public class User {
 
         if(!this.hasPermission("beacmcstaffwork.use"))
             return false;
-
         try (PreparedStatement preparedStatement = SQLBuilder.getConnection().prepareStatement(sql)) {
             preparedStatement.setString(1, player.getName().toLowerCase());
             ResultSet rs = preparedStatement.executeQuery();
-            if(rs.next()) {
+            if (rs.next())
                 return rs.getInt(1) > 0;
-            }
+
+            return false;
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         return false;
+
     }
 
 
@@ -140,6 +143,10 @@ public class User {
 
 
 
+    public void sendTitle(String title, String subtitle) {
+        player.sendTitle(Color.compile(Config.getString(title)), Color.compile(Config.getString(subtitle)),
+        10, 10, 10);
+    }
 
 
     public void sendMessageList(String path) {

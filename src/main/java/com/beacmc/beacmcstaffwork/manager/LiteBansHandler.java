@@ -4,6 +4,7 @@ package com.beacmc.beacmcstaffwork.manager;
 import litebans.api.Entry;
 import litebans.api.Events;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 public class LiteBansHandler {
 
@@ -11,25 +12,27 @@ public class LiteBansHandler {
         Events.get().register(new Events.Listener() {
             @Override
             public void entryAdded(Entry entry) {
-                User user = new User(Bukkit.getPlayer(entry.getExecutorName()));
-                Data data = new Data(user);
+                Player player = Bukkit.getPlayer(entry.getExecutorName());
+                if (player == null)
+                    return;
+
+                User user = new User(player);
                 switch (entry.getType()) {
                     case "mute": {
                         if(user.isOnline() && user.isWork()) {
-                            data.addMute();
-                            System.out.println(user.getMutes());
+                            Data.addMute(user);
                         }
                         break;
                     }
                     case "ban": {
                         if(user.isOnline() && user.isWork()) {
-                            data.addBan();
+                            Data.addBan(user);
                         }
                         break;
                     }
                     case "kick": {
                         if(user.isOnline() && user.isWork()) {
-                            data.addKick();
+                            Data.addKick(user);
                         }
                         break;
                     }

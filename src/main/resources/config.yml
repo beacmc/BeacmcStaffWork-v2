@@ -4,12 +4,14 @@ settings:
 
   prefix: "#FF8600&lʙ#FF8A00&lᴇ#FF8E00&lᴀ#FF9200&lᴄ#FF9500&lᴍ#FF9900&lᴄ#FF9D00&ls#FFA100&lᴛ#FFA500&lᴀ#FFA900&lғ#FFAD00&lғ#FFB100&lᴡ#FFB400&lᴏ#FFB800&lʀ#FFBC00&lᴋ #FFC000&l▸&7"
 
+  chat-format: "&7[#FF8600&lSTAFFCHAT&7] &8&l| %luckperms_prefix%&7%player_name% &8&l> &f{MESSAGE}"
+
   # информирование об обновлении плагина.
   update-check: true
 
-  chat-format: "&#ff8600&ls&#ff8d00&lᴛ&#ff9400&lᴀ&#ff9a00&lғ&#ffa100&lғ&#ffa800&lᴄ&#ffaf00&lʜ&#ffb500&lᴀ&#ffbc00&lᴛ #FFC000&l▸&7 %luckperms_prefix% &6%player_name% %luckperms_suffix% &8> &f{MESSAGE}"
-
   data:
+
+    # доступно: sqlite / mysql
     type: sqlite
     host: localhost:3306
     database: beacmcstaffwork
@@ -19,8 +21,6 @@ settings:
 
   discord:
 
-    # Если установлено значение true, то строка
-    # token, channel-id, guild-id не может быть пустой!
     enable: false
 
     # ссылка на вебхук
@@ -64,11 +64,11 @@ settings:
     # %beacmcstaffwork_time_in_work% - выведит количевство дней, часов,
     # минут и секунд сколько модератор находился в режиме работы
     #
-    # %becmcstaffwork_bans% - выводит все баны модератора (выданные в режиме работы)
+    # %beacmcstaffwork_bans% - выводит все баны модератора (выданные в режиме работы)
     #
-    # %becmcstaffwork_mutes% - выводит все муты модератора (выданные в режиме работы)
+    # %beacmcstaffwork_mutes% - выводит все муты модератора (выданные в режиме работы)
     #
-    # %becmcstaffwork_kicks% - выводит все кики модератора (выданные в режиме работы)
+    # %beacmcstaffwork_kicks% - выводит все кики модератора (выданные в режиме работы)
 
     # настройка заполнителей
     placeholders:
@@ -122,10 +122,12 @@ settings:
     # блокирование наносение урона игроку
     disable-entity-damage: true
 
-
+    # блокирование поднятия предметов
+    disable-pick-up-item: true
 
   # все сообщения плагина
   messages:
+    cooldown: "{PREFIX} &7Подождите перед повторным использованием данной команды."
     no-permission: "{PREFIX} &7Недостаточно полномочий для использования этой команды"
     reload: "{PREFIX} &7Конфигурация перезагружена"
     error-use: "{PREFIX} &7неверное использование команды"
@@ -138,6 +140,8 @@ settings:
     block-break-on-work: "{PREFIX} &7Во время режима работы запрещено ломать блоки"
     entity-damage-on-work: "{PREFIX} &7Во время режима работы запрещено наносить урон"
     damager-damage-on-work: "{PREFIX} &7Этот игрок находится в режиме работы."
+    pick-up-item-on-work: "{PREFIX} &7В режиме работы запрещено подбирать предметы."
+    statistic-reset: "{PREFIX} &7Статистика сброшена."
     help:
       - " "
       - "#FF8600/sw on &7- &fначать работу"
@@ -166,7 +170,6 @@ settings:
       - "   &7самая новая версия: #FF8600{latest_version}"
       - " "
 
-
   # тайтлы для игроков
   titles:
     on-enable-work:
@@ -175,4 +178,3 @@ settings:
     on-disable-work:
       title: "#FF8600&lʙ#FF8A00&lᴇ#FF8E00&lᴀ#FF9200&lᴄ#FF9500&lᴍ#FF9900&lᴄ#FF9D00&ls#FFA100&lᴛ#FFA500&lᴀ#FFA900&lғ#FFAD00&lғ#FFB100&lᴡ#FFB400&lᴏ#FFB800&lʀ#FFBC00&lᴋ"
       subtitle: "&7работа успешно окончена"
-

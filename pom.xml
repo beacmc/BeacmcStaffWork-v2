@@ -6,7 +6,7 @@
 
     <groupId>com.beacmc</groupId>
     <artifactId>BeacmcStaffWorkv2</artifactId>
-    <version>1.4.2</version>
+    <version>1.5.1</version>
     <packaging>jar</packaging>
 
     <name>BeacmcStaffWorkv2</name>
@@ -62,9 +62,10 @@
             <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
         <repository>
-            <id>papermc-repo</id>
+            <id>papermc</id>
             <url>https://repo.papermc.io/repository/maven-public/</url>
         </repository>
+
         <repository>
             <id>sonatype</id>
             <url>https://oss.sonatype.org/content/groups/public/</url>
@@ -72,11 +73,6 @@
     </repositories>
 
     <dependencies>
-        <dependency>
-            <groupId>com.github.beacmc</groupId>
-            <artifactId>BeacmcLib</artifactId>
-            <version>d0888e5be5</version>
-        </dependency>
         <dependency>
             <groupId>club.minnced</groupId>
             <artifactId>discord-webhooks</artifactId>
@@ -88,10 +84,11 @@
             <version>0.4.1</version>
             <scope>provided</scope>
         </dependency>
+
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.33</version>
+            <groupId>com.github.devoirr</groupId>
+            <artifactId>GUILib</artifactId>
+            <version>1.0.2</version>
         </dependency>
 
         <dependency>
@@ -115,7 +112,7 @@
         <dependency>
             <groupId>me.clip</groupId>
             <artifactId>placeholderapi</artifactId>
-            <version>2.11.3</version>
+            <version>2.11.5</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

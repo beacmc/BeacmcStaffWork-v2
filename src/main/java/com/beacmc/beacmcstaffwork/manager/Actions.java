@@ -6,18 +6,21 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 import java.util.List;
-import java.util.Objects;
 
 public class Actions {
 
     public static void start(List<String> list, Player player) {
         if (list.isEmpty()) return;
 
-        for (String s : list) {
+        for(String s : list) {
             String[] splitText = s.split(" ");
             String action = splitText[0];
             String cmd = s.replace(action + " ", "");
             cmd = PlaceholderAPI.setPlaceholders(player, cmd);
+
+            if(cmd == null)
+                return;
+
 
             switch (action.toLowerCase()) {
                 case "[message]": {
@@ -39,7 +42,7 @@ public class Actions {
                     break;
                 }
                 case "[broadcast]": {
-                    Bukkit.broadcastMessage(Objects.requireNonNull(cmd));
+                    Bukkit.broadcastMessage(Color.compile(cmd));
                     break;
                 }
                 case "[message_to_moderators]": {

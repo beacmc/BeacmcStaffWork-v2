@@ -19,4 +19,7 @@ public class SQLManager {
             SQLBuilder.getConnection().close();
         }  catch (SQLException e) { }
     }
+
+
+
 }
