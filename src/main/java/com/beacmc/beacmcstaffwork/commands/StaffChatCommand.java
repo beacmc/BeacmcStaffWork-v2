@@ -1,9 +1,12 @@
 package com.beacmc.beacmcstaffwork.commands;
 
+import com.beacmc.beacmcstaffwork.BeacmcStaffWork;
 import com.beacmc.beacmcstaffwork.manager.Color;
 import com.beacmc.beacmcstaffwork.manager.CommandManager;
 import com.beacmc.beacmcstaffwork.manager.User;
 import com.beacmc.beacmcstaffwork.manager.configuration.Config;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -39,10 +42,20 @@ public class StaffChatCommand extends CommandManager {
         String format = PlaceholderAPI.setPlaceholders(user.getPlayer(), Config.getString("settings.chat-format"));
         format = Color.compile(format).replace("{MESSAGE}", String.join(" ", Arrays.asList(args)));
         String finalFormat = format;
+        sendPluginMessage(user.getPlayer(), finalFormat);
         Bukkit.getOnlinePlayers().forEach(player -> {
             if (player.hasPermission("beacmcstaffwork.chat")) {
                 player.sendMessage(finalFormat);
             }
         });
+    }
+
+    private void sendPluginMessage(Player player, String message) {
+        ByteArrayDataOutput out = ByteStreams.newDataOutput();
+        out.writeUTF("Forward");
+        out.writeUTF("ALL");
+        out.writeUTF("staffchat");
+        out.writeUTF(message);
+        player.sendPluginMessage(BeacmcStaffWork.getInstance(), "staffchat", out.toByteArray());
     }
 }

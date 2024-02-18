@@ -15,6 +15,7 @@ import com.beacmc.beacmcstaffwork.manager.CooldownManager;
 import com.beacmc.beacmcstaffwork.manager.LiteBansHandler;
 import com.beacmc.beacmcstaffwork.manager.UpdateChecker;
 import com.beacmc.beacmcstaffwork.manager.configuration.Config;
+import com.beacmc.beacmcstaffwork.messaging.MessagingListener;
 import com.beacmc.beacmcstaffwork.util.Runner;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -47,7 +48,8 @@ public final class BeacmcStaffWork extends JavaPlugin {
 
         this.getCommand("staffwork").setTabCompleter(new StaffCompleter());
         this.getCommand("staffworkadmin").setTabCompleter(new StaffAdminCompleter());
-
+        this.getServer().getMessenger().registerIncomingPluginChannel(this, "staffchat", new MessagingListener());
+        this.getServer().getMessenger().registerOutgoingPluginChannel(this, "staffchat");
         this.saveDefaultConfig();
 
         if(this.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
