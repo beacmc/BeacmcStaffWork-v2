@@ -42,6 +42,7 @@ public class StaffChatCommand extends CommandManager {
         String format = PlaceholderAPI.setPlaceholders(user.getPlayer(), Config.getString("settings.chat-format"));
         format = Color.compile(format).replace("{MESSAGE}", String.join(" ", Arrays.asList(args)));
         String finalFormat = format;
+
         sendPluginMessage(user.getPlayer(), finalFormat);
         Bukkit.getOnlinePlayers().forEach(player -> {
             if (player.hasPermission("beacmcstaffwork.chat")) {
