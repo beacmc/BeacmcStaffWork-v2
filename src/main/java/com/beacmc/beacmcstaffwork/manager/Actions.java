@@ -1,5 +1,6 @@
 package com.beacmc.beacmcstaffwork.manager;
 
+import com.beacmc.beacmcstaffwork.manager.configuration.Config;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
@@ -19,13 +20,13 @@ public class Actions {
             cmd = PlaceholderAPI.setPlaceholders(player, cmd);
 
             if(cmd == null)
-                return;
+                continue;
 
 
             switch (action.toLowerCase()) {
                 case "[message]": {
-                    player.sendMessage(
-                            Color.compile(cmd)
+                    player.sendMessage(Color.compile(cmd)
+                            .replace("{PREFIX}", Config.getString("settings.prefix"))
                     );
                     break;
                 }
@@ -34,7 +35,7 @@ public class Actions {
                     break;
                 }
                 case "[sound]": {
-                    player.playSound(player.getLocation(), Sound.valueOf(cmd), 500.0f, 1.0f);
+                    player.playSound(player.getLocation(), Sound.valueOf(cmd), 0.5f, 1.0f);
                     break;
                 }
                 case "[player]": {

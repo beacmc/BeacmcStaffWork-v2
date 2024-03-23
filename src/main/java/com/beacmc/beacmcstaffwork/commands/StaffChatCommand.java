@@ -3,7 +3,7 @@ package com.beacmc.beacmcstaffwork.commands;
 import com.beacmc.beacmcstaffwork.BeacmcStaffWork;
 import com.beacmc.beacmcstaffwork.manager.Color;
 import com.beacmc.beacmcstaffwork.manager.CommandManager;
-import com.beacmc.beacmcstaffwork.manager.User;
+import com.beacmc.beacmcstaffwork.manager.StaffPlayer;
 import com.beacmc.beacmcstaffwork.manager.configuration.Config;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
@@ -28,7 +28,7 @@ public class StaffChatCommand extends CommandManager {
             return;
         }
 
-        User user = new User((Player) sender);
+        StaffPlayer user = new StaffPlayer((Player) sender);
         if(!user.hasPermission("beacmcstaffwork.chat")) {
             user.sendMessage("settings.messages.no-permission");
             return;
@@ -55,8 +55,8 @@ public class StaffChatCommand extends CommandManager {
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("Forward");
         out.writeUTF("ALL");
-        out.writeUTF("staffchat");
+        out.writeUTF("beacmcstaffwork");
         out.writeUTF(message);
-        player.sendPluginMessage(BeacmcStaffWork.getInstance(), "staffchat", out.toByteArray());
+        player.sendPluginMessage(BeacmcStaffWork.getInstance(), "BungeeCord", out.toByteArray());
     }
 }

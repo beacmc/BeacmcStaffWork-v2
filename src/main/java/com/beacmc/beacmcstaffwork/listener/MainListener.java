@@ -3,21 +3,22 @@ package com.beacmc.beacmcstaffwork.listener;
 import com.beacmc.beacmcstaffwork.BeacmcStaffWork;
 import com.beacmc.beacmcstaffwork.api.event.PlayerDisableWorkEvent;
 import com.beacmc.beacmcstaffwork.api.event.PlayerEnableWorkEvent;
-import com.beacmc.beacmcstaffwork.discord.Webhook;
-import com.beacmc.beacmcstaffwork.manager.Color;
-import com.beacmc.beacmcstaffwork.manager.UpdateChecker;
-import com.beacmc.beacmcstaffwork.manager.User;
+import com.beacmc.beacmcstaffwork.database.model.User;
+import com.beacmc.beacmcstaffwork.discord.Embed;
+import com.beacmc.beacmcstaffwork.manager.Actions;
+import com.beacmc.beacmcstaffwork.manager.StaffPlayer;
 import com.beacmc.beacmcstaffwork.manager.configuration.Config;
+import me.clip.placeholderapi.PlaceholderAPI;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
-
-import java.util.List;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 public class MainListener implements Listener {
     @EventHandler
@@ -27,9 +28,12 @@ public class MainListener implements Listener {
 
         if(event.getDamager() instanceof Player && event.getEntity() instanceof Player) {
 
-            User damager = new User((Player) event.getDamager());
+            StaffPlayer damager = new StaffPlayer((Player) event.getDamager());
 
-            User entity = new User((Player) event.getEntity());
+            StaffPlayer entity = new StaffPlayer((Player) event.getEntity());
+            if(!BeacmcStaffWork.getUsers().contains(damager) || !BeacmcStaffWork.getUsers().contains(entity))
+                return;
+
 
             if (damager.isWork()) {
                 event.setCancelled(true);
@@ -41,21 +45,22 @@ public class MainListener implements Listener {
             }
         }
         else if(event.getEntity() instanceof Player) {
-            User user = new User((Player) event.getEntity());
+            StaffPlayer user = new StaffPlayer((Player) event.getEntity());
 
             if(user.isWork())
                 event.setCancelled(true);
         }
     }
 
-
-
     @EventHandler
     public void itemPickUp(PlayerPickupItemEvent event) {
+        if(!BeacmcStaffWork.getUsers().contains(event.getPlayer()))
+            return;
+
         if(!Config.getBoolean("settings.work.disable-pick-up-item"))
             return;
 
-        User user = new User(event.getPlayer());
+        StaffPlayer user = new StaffPlayer(event.getPlayer());
 
         if(user.isWork()) {
             user.sendMessage("settings.messages.pick-up-item-on-work");
@@ -63,38 +68,11 @@ public class MainListener implements Listener {
         }
     }
 
-
-
-
-
-    @EventHandler
-    public void onJoin(PlayerJoinEvent event) {
-        User player = new User(event.getPlayer());
-        if(Config.getBoolean("settings.update-check")) {
-            if (player.hasPermission("beacmcstaffwork.update")) {
-                String latestVersion = UpdateChecker.start();
-
-                if(latestVersion != BeacmcStaffWork.getInstance().getDescription().getVersion()) {
-                    List<String> list = Config.getStringList("settings.messages.update-check-player");
-                    for (String execute : list) {
-                        event.getPlayer().sendMessage(
-                                Color.compile(execute
-                                        .replace("{current_version}", BeacmcStaffWork.getInstance().getDescription().getVersion())
-                                        .replace("{latest_version}", latestVersion)
-                                ));
-                    }
-                }
-            }
-        }
-    }
-
-
-
-
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
-
-        User user = new User(event.getPlayer());
+        if(!BeacmcStaffWork.getUsers().contains(event.getPlayer()))
+            return;
+        StaffPlayer user = new StaffPlayer(event.getPlayer());
 
         if(Config.getBoolean("settings.work.disable-place-block")) {
             if(user.isWork()) {
@@ -106,8 +84,9 @@ public class MainListener implements Listener {
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
-
-        User user = new User(event.getPlayer());
+        if(!BeacmcStaffWork.getUsers().contains(event.getPlayer()))
+                return;
+        StaffPlayer user = new StaffPlayer(event.getPlayer());
 
         if(Config.getBoolean("settings.work.disable-break-block")) {
             if(user.isWork()) {
@@ -118,34 +97,54 @@ public class MainListener implements Listener {
     }
 
     @EventHandler
-    public void onEnableWork(PlayerEnableWorkEvent event) {
-        if(Config.getBoolean("settings.discord.enable")) {
-            Webhook.sendWebhook(
-                    event.getPlayer(),
-                    Config.getString("settings.discord.on-enable-work.title"),
-                    Config.getString("settings.discord.on-enable-work.title-url"),
-                    Config.getString("settings.discord.on-enable-work.description"),
-                    Config.getString("settings.discord.on-enable-work.author-name"),
-                    Config.getString("settings.discord.on-enable-work.author-icon-url"),
-                    Config.getString("settings.discord.on-enable-work.image-url"),
-                    Config.getInteger("settings.discord.on-enable-work.color")
-            );
+    public void onLeave(PlayerQuitEvent event) {
+        if(!BeacmcStaffWork.getUsers().contains(event.getPlayer()))
+            return;
+        if(!Config.getBoolean("settings.work.disable-work-on-quit"))
+            return;
+
+        StaffPlayer staffPlayer = new StaffPlayer(event.getPlayer());
+        User user = staffPlayer.getUser();
+        if (user != null && user.isWork()) {
+            Actions.start(Config.getStringList("settings.actions." + staffPlayer.getPrimaryGroup() + ".disable-work"), staffPlayer.getPlayer());
+            staffPlayer.stopWork();
+            Bukkit.getPluginManager().callEvent(new PlayerDisableWorkEvent(staffPlayer.getPlayer()));
         }
     }
 
     @EventHandler
-    public void onEnableWork(PlayerDisableWorkEvent event) {
+    public void onEnableWork(PlayerEnableWorkEvent event) {
         if(Config.getBoolean("settings.discord.enable")) {
-            Webhook.sendWebhook(
-                    event.getPlayer(),
-                    Config.getString("settings.discord.on-disable-work.title"),
-                    Config.getString("settings.discord.on-disable-work.title-url"),
-                    Config.getString("settings.discord.on-disable-work.description"),
-                    Config.getString("settings.discord.on-disable-work.author-name"),
-                    Config.getString("settings.discord.on-disable-work.author-icon-url"),
-                    Config.getString("settings.discord.on-disable-work.image-url"),
-                    Config.getInteger("settings.discord.on-disable-work.color")
-            );
+            Player player = event.getPlayer();
+            TextChannel channel = BeacmcStaffWork.getDiscordBot().getJDA().getGuildById(Long.valueOf(Config.getString("settings.discord.guild-id"))).getTextChannelById(Long.valueOf(Config.getString("settings.discord.on-enable-work.channel-id")));
+            if(channel == null)
+                return;
+            String title = PlaceholderAPI.setPlaceholders(player, Config.getString("settings.discord.on-enable-work.title"));
+            String titleUrl = Config.getString("settings.discord.on-enable-work.title-url");
+            String author = PlaceholderAPI.setPlaceholders(player, PlaceholderAPI.setPlaceholders(player, Config.getString("settings.discord.on-enable-work.author-name")));
+            String authorIcon = Config.getString("settings.discord.on-enable-work.author-icon-url");
+            String image = Config.getString("settings.discord.on-enable-work.image-url");
+            String description = PlaceholderAPI.setPlaceholders(player, Config.getString("settings.discord.on-enable-work.description"));
+            String color = Config.getString("settings.discord.on-enable-work.color");
+            channel.sendMessageEmbeds(Embed.of(title, titleUrl, author, authorIcon, image, description, color).build()).queue();
+        }
+    }
+
+    @EventHandler
+    public void onDisableWork(PlayerDisableWorkEvent event) {
+        if(Config.getBoolean("settings.discord.enable")) {
+            Player player = event.getPlayer();
+            TextChannel channel = BeacmcStaffWork.getDiscordBot().getJDA().getGuildById(Long.valueOf(Config.getString("settings.discord.guild-id"))).getTextChannelById(Long.valueOf(Config.getString("settings.discord.on-disable-work.channel-id")));
+            if(channel == null)
+                return;
+            String title = PlaceholderAPI.setPlaceholders(player, Config.getString("settings.discord.on-disable-work.title"));
+            String titleUrl = Config.getString("settings.discord.on-disable-work.title-url");
+            String author = PlaceholderAPI.setPlaceholders(player, PlaceholderAPI.setPlaceholders(player, Config.getString("settings.discord.on-disable-work.author-name")));
+            String authorIcon = Config.getString("settings.discord.on-disable-work.author-icon-url");
+            String image = Config.getString("settings.discord.on-disable-work.image-url");
+            String description = PlaceholderAPI.setPlaceholders(player, Config.getString("settings.discord.on-disable-work.description"));
+            String color = Config.getString("settings.discord.on-disable-work.color");
+            channel.sendMessageEmbeds(Embed.of(title, titleUrl, author, authorIcon, image, description, color).build()).queue();
         }
     }
 }

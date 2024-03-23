@@ -1,5 +1,4 @@
 package com.beacmc.beacmcstaffwork.manager;
-
 import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.lang.StringUtils;
 
@@ -21,7 +20,7 @@ public class Color {
         final Matcher matcher = PATTERN.matcher(text);
         while (matcher.find()) {
             try {
-                final net.md_5.bungee.api.ChatColor chatColor = net.md_5.bungee.api.ChatColor.of(matcher.group(1));
+                final ChatColor chatColor = net.md_5.bungee.api.ChatColor.of(matcher.group(1));
 
 
                 if (chatColor != null) {

@@ -1,12 +1,16 @@
 package com.beacmc.beacmcstaffwork.commands;
 
 import com.beacmc.beacmcstaffwork.BeacmcStaffWork;
+import com.beacmc.beacmcstaffwork.database.dao.UserDao;
+import com.beacmc.beacmcstaffwork.database.model.User;
 import com.beacmc.beacmcstaffwork.manager.Color;
 import com.beacmc.beacmcstaffwork.manager.CommandManager;
 import com.beacmc.beacmcstaffwork.manager.CooldownManager;
-import com.beacmc.beacmcstaffwork.manager.Data;
 import com.beacmc.beacmcstaffwork.manager.configuration.Config;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+
+import java.sql.SQLException;
 
 public class StaffAdminCommand extends CommandManager {
 
@@ -17,7 +21,7 @@ public class StaffAdminCommand extends CommandManager {
     }
 
     @Override
-    public void execute(CommandSender sender, org.bukkit.command.Command command, String label, String[] args) {
+    public void execute(CommandSender sender, Command command, String label, String[] args) {
 
         manager = BeacmcStaffWork.cooldowns.get(sender.getName());
 
@@ -54,30 +58,36 @@ public class StaffAdminCommand extends CommandManager {
                 sendHelp(sender);
                 return;
             }
-            switch (args[2].toLowerCase()) {
-                case "time": {
-                    Data.resetTime(args[1]);
-                    break;
+            try {
+                UserDao userDao = BeacmcStaffWork.getDatabase().getUserDao();
+                User user = userDao.queryForId(args[1].toLowerCase());
+                if(user == null)
+                    return;
+
+                switch (args[2].toLowerCase()) {
+                    case "time": {
+                        userDao.update(user.setTime(0));
+                        break;
+                    }
+                    case "bans": {
+                        userDao.update(user.setBans(0));
+                        break;
+                    }
+                    case "kicks": {
+                        userDao.update(user.setKicks(0));
+                        break;
+                    }
+                    case "mutes": {
+                        userDao.update(user.setMutes(0));
+                        break;
+                    }
+                    case "all": {
+                        userDao.update(user.setBans(0).setKicks(0).setTime(0).setMutes(0));
+                        break;
+                    }
                 }
-                case "bans": {
-                    Data.resetBans(args[1]);
-                    break;
-                }
-                case "kicks": {
-                    Data.resetKicks(args[1]);
-                    break;
-                }
-                case "mutes": {
-                    Data.resetMutes(args[1]);
-                    break;
-                }
-                case "all": {
-                    Data.resetMutes(args[1]);
-                    Data.resetBans(args[1]);
-                    Data.resetTime(args[1]);
-                    Data.resetKicks(args[1]);
-                    break;
-                }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
             sender.sendMessage(
                     Color.compile(

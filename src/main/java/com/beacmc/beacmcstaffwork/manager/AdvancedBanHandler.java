@@ -19,6 +19,7 @@ public class AdvancedBanHandler {
         executor = punishment.getOperator();
         PunishmentType punishmentType = punishment.getType();
 
+
         switch (punishmentType) {
             case BAN: {
                 type = "ban";

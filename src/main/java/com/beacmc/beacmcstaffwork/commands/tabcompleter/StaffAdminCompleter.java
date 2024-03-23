@@ -32,6 +32,7 @@ public class StaffAdminCompleter implements TabCompleter {
                 if(player.getName().startsWith(input))
                     list.add(player.getName());
             });
+
             return list;
         }
 
@@ -51,21 +52,10 @@ public class StaffAdminCompleter implements TabCompleter {
 
 
     private static List<String> getCompletionsOneArgs() {
-        ArrayList<String> list = new ArrayList<>();
-
-        list.add("reload");
-        list.add("reset");
-        return list;
+        return List.of("reload", "reset");
     }
 
     private static List<String> getCompletionsTwoArgs() {
-        ArrayList<String> list = new ArrayList<>();
-
-        list.add("all");
-        list.add("bans");
-        list.add("time");
-        list.add("kicks");
-        list.add("mutes");
-        return list;
+        return List.of("all", "bans", "time", "kicks", "mutes");
     }
 }

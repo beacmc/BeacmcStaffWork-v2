@@ -2,33 +2,39 @@ package com.beacmc.beacmcstaffwork.manager.configuration;
 
 
 import com.beacmc.beacmcstaffwork.BeacmcStaffWork;
+import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.List;
 
 public class Config {
 
+    private static final FileConfiguration config;
+
 
     public static String getString(String path) {
-        assert BeacmcStaffWork.getInstance().getConfig().getString(path) != null;
-        return BeacmcStaffWork.getInstance().getConfig().getString(path);
+        assert config.getString(path) != null;
+        return config.getString(path);
     }
 
     public static boolean getBoolean(String path) {
-        return BeacmcStaffWork.getInstance().getConfig().getBoolean(path);
+        return config.getBoolean(path);
     }
 
     public static List<String> getStringList(String path) {
-        assert BeacmcStaffWork.getInstance().getConfig().getStringList(path) != null;
-        return BeacmcStaffWork.getInstance().getConfig().getStringList(path);
+        assert config.getStringList(path) != null;
+        return config.getStringList(path);
     }
 
     public static Integer getInteger(String path) {
-        return BeacmcStaffWork.getInstance().getConfig().getInt(path);
+        return config.getInt(path);
     }
 
     public static int getInt(String path) {
-        assert BeacmcStaffWork.getInstance().getConfig().getString(path) != null;
-        return BeacmcStaffWork.getInstance().getConfig().getInt(path);
+        assert config.getString(path) != null;
+        return config.getInt(path);
     }
 
+    static {
+           config = BeacmcStaffWork.getInstance().getConfig();
+    }
 }
