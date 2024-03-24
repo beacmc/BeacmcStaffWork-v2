@@ -38,29 +38,23 @@ public class MainListener implements Listener {
         if (!Config.getBoolean("settings.work.disable-entity-damage"))
             return;
 
-        if(event.getDamager() instanceof Player && event.getEntity() instanceof Player) {
-
+        if(event.getDamager() instanceof Player) {
             Player damager = (Player) event.getDamager();
 
-            Player entity = (Player) event.getEntity();
-            if(!users.contains(entity) || !users.contains(damager))
-                return;
-
-
-            if (users.contains(damager)) {
+            if(users.contains(damager)) {
+                event.getDamager().sendMessage(Message.fromConfig("settings.messages.entity-damage-on-work"));
                 event.setCancelled(true);
-                damager.sendMessage(Message.fromConfig("settings.messages.entity-damage-on-work"));
-            }
-            else if(users.contains(entity)) {
-                event.setCancelled(true);
-                entity.sendMessage(Message.fromConfig("settings.messages.damager-damage-on-work"));
             }
         }
-        else if(event.getEntity() instanceof Player) {
-            Player user = (Player) event.getEntity();
+        if(event.getEntity() instanceof Player) {
+            Player damaged = (Player) event.getEntity();
 
-            if(users.contains(user))
+            if(users.contains(damaged)) {
+                if((event.getDamager() instanceof Player))
+                    event.getDamager().sendMessage(Message.fromConfig("settings.messages.damager-damage-on-work"));
+
                 event.setCancelled(true);
+            }
         }
     }
 
