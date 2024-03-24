@@ -52,11 +52,15 @@ public class StaffChatCommand extends CommandManager {
     }
 
     private void sendPluginMessage(Player player, String message) {
+        BeacmcStaffWork plugin = BeacmcStaffWork.getInstance();
+        if(!player.getServer().getMessenger().isIncomingChannelRegistered(plugin, "BungeeCord"))
+            return;
+
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("Forward");
         out.writeUTF("ALL");
         out.writeUTF("beacmcstaffwork");
         out.writeUTF(message);
-        player.sendPluginMessage(BeacmcStaffWork.getInstance(), "BungeeCord", out.toByteArray());
+        player.sendPluginMessage(plugin, "BungeeCord", out.toByteArray());
     }
 }
