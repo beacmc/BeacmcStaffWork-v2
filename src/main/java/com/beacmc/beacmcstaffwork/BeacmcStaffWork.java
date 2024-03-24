@@ -44,7 +44,6 @@ public final class BeacmcStaffWork extends JavaPlugin {
         Messenger messenger = this.getServer().getMessenger();
 
         instance = this;
-        new LibraryManager(this);
         database = new Database();
         database.connect();
 
@@ -54,6 +53,7 @@ public final class BeacmcStaffWork extends JavaPlugin {
         new StaffAdminCommand();
         new StaffChatCommand();
         if (Config.getBoolean("settings.discord.enable")) {
+            new LibraryManager(this);
             discordBot = new DiscordBot();
             discordBot.connect();
         }
