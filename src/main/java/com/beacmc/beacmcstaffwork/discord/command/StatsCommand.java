@@ -30,7 +30,6 @@ public class StatsCommand extends ListenerAdapter {
                     user = userDao.queryForId(args[1].toLowerCase());
                 } else {
                     List<User> query = userDao.queryForEq("discord_id", member.getIdLong());
-                    System.out.println(query);
                     if (query.size() > 0) {
                         user = query.get(0);
                     }

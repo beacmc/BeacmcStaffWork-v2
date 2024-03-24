@@ -9,18 +9,13 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 
-import java.util.HashSet;
-import java.util.Set;
 
 public class DiscordBot {
 
     private JDA jda;
     private Guild guild;
-    private Set<StaffLink> links;
 
-    public DiscordBot() {
-        links = new HashSet<>();
-    }
+    public DiscordBot() {}
 
     public void connect() {
         jda = JDABuilder.createDefault(Config.getString("settings.discord.token"))
