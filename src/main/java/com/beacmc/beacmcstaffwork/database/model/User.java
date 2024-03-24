@@ -30,7 +30,7 @@ public class User {
     @DatabaseField(columnName = "kicks", defaultValue = "0")
     public int kicks;
 
-    @DatabaseField(columnName = "discord_id", defaultValue = "0", unique = true)
+    @DatabaseField(columnName = "discord_id", defaultValue = "0")
     public long discordID;
 
 
