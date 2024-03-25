@@ -163,6 +163,18 @@ settings:
     # блокирование поднятия предметов
     disable-pick-up-item: true
 
+    commands:
+      enable: true
+
+      # строго с /
+      disable-commands:
+        - '/ban'
+        - '/tempban'
+        - '/mute'
+        - '/tempmute'
+        - '/kick'
+
+
   # все сообщения плагина
   messages:
     cooldown: "{PREFIX} &7Подождите перед повторным использованием данной команды."
@@ -178,6 +190,7 @@ settings:
     damager-damage-on-work: "{PREFIX} &7Этот игрок находится в режиме работы."
     pick-up-item-on-work: "{PREFIX} &7В режиме работы запрещено подбирать предметы."
     statistic-reset: "{PREFIX} &7Статистика сброшена."
+    disable-command: "{PREFIX} &7Эта команда запрещена вне режима работы."
     help:
       - " "
       - "#FF8600/sw &7- &fначать, либо начать работу"

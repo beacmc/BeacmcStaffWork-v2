@@ -10,6 +10,7 @@ import com.beacmc.beacmcstaffwork.database.Database;
 import com.beacmc.beacmcstaffwork.discord.DiscordBot;
 import com.beacmc.beacmcstaffwork.lib.LibraryManager;
 import com.beacmc.beacmcstaffwork.listener.ABListener;
+import com.beacmc.beacmcstaffwork.listener.CommandListener;
 import com.beacmc.beacmcstaffwork.listener.MainListener;
 import com.beacmc.beacmcstaffwork.manager.Color;
 import com.beacmc.beacmcstaffwork.manager.CooldownManager;
@@ -93,6 +94,7 @@ public final class BeacmcStaffWork extends JavaPlugin {
         }
 
         this.getServer().getPluginManager().registerEvents(new MainListener(), this);
+        this.getServer().getPluginManager().registerEvents(new CommandListener(), this);
     }
 
     private boolean isLiteBansEnabled() {
