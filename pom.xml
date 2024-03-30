@@ -6,7 +6,7 @@
 
     <groupId>com.beacmc</groupId>
     <artifactId>BeacmcStaffWork</artifactId>
-    <version>v2.1-BETA.1</version>
+    <version>v2.1-BETA.2</version>
     <packaging>jar</packaging>
 
     <name>BeacmcStaffWork</name>
