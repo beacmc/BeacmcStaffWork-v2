@@ -51,6 +51,7 @@ settings:
           link-success: "Аккаунт успешно привязан"
           no-args: "Недостаточно аргументов. Введите: `!привязать <игровой ник> <Discord ID>`"
           no-player: "Недостаточно аргументов. Введите: `!привязать <игровой ник> <Discord ID>`"
+          number-format-exception: "Ожидалось число во втором аргументе."
       stats-command:
         command: "!статистика"
         messages:
