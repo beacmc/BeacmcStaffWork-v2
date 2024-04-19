@@ -1,6 +1,5 @@
 package com.beacmc.beacmcstaffwork.util;
 
-import com.beacmc.beacmcstaffwork.manager.Color;
 import com.beacmc.beacmcstaffwork.manager.configuration.Config;
 
 public class Message {

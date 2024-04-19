@@ -1,4 +1,4 @@
-package com.beacmc.beacmcstaffwork.manager;
+package com.beacmc.beacmcstaffwork.util;
 import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.lang.StringUtils;
 

@@ -1,9 +1,9 @@
 package com.beacmc.beacmcstaffwork.commands;
 
 import com.beacmc.beacmcstaffwork.BeacmcStaffWork;
-import com.beacmc.beacmcstaffwork.manager.Color;
-import com.beacmc.beacmcstaffwork.manager.CommandManager;
-import com.beacmc.beacmcstaffwork.manager.StaffPlayer;
+import com.beacmc.beacmcstaffwork.util.Color;
+import com.beacmc.beacmcstaffwork.manager.command.CommandManager;
+import com.beacmc.beacmcstaffwork.manager.player.StaffPlayer;
 import com.beacmc.beacmcstaffwork.manager.configuration.Config;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;

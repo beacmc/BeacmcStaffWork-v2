@@ -21,7 +21,9 @@ public class Database {
         assert connectionSource == null;
         try {
             DatabaseType databaseType = DatabaseType.valueOf(Config.getString("settings.data.type").toUpperCase());
-            connectionSource = new JdbcConnectionSource(databaseType.getUrl(), Config.getString("settings.data.username"), Config.getString("settings.data.password"));
+            connectionSource = new JdbcConnectionSource(databaseType.getUrl(),
+                                                        Config.getString("settings.data.username"),
+                                                        Config.getString("settings.data.password"));
             TableUtils.createTableIfNotExists(connectionSource, User.class);
             userDao = new UserDaoImpl(connectionSource);
         } catch (SQLException e) {

@@ -1,8 +1,9 @@
-package com.beacmc.beacmcstaffwork.manager;
+package com.beacmc.beacmcstaffwork.manager.player;
 
 import com.beacmc.beacmcstaffwork.BeacmcStaffWork;
 import com.beacmc.beacmcstaffwork.database.Database;
 import com.beacmc.beacmcstaffwork.database.model.User;
+import com.beacmc.beacmcstaffwork.util.Color;
 import com.beacmc.beacmcstaffwork.manager.configuration.Config;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
