@@ -4,8 +4,8 @@ import com.beacmc.beacmcstaffwork.BeacmcStaffWork;
 import com.beacmc.beacmcstaffwork.api.event.PlayerDisableWorkEvent;
 import com.beacmc.beacmcstaffwork.api.event.PlayerEnableWorkEvent;
 import com.beacmc.beacmcstaffwork.discord.Embed;
-import com.beacmc.beacmcstaffwork.manager.Actions;
-import com.beacmc.beacmcstaffwork.manager.StaffPlayer;
+import com.beacmc.beacmcstaffwork.manager.core.Actions;
+import com.beacmc.beacmcstaffwork.manager.player.StaffPlayer;
 import com.beacmc.beacmcstaffwork.manager.configuration.Config;
 import com.beacmc.beacmcstaffwork.util.Message;
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -34,7 +34,7 @@ public class MainListener implements Listener {
 
 
     @EventHandler
-    public void onDasmage(EntityDamageByEntityEvent event) {
+    public void onDamage(EntityDamageByEntityEvent event) {
         if (!Config.getBoolean("settings.work.disable-entity-damage"))
             return;
 
@@ -122,18 +122,38 @@ public class MainListener implements Listener {
 
     @EventHandler
     public void onEnableWork(PlayerEnableWorkEvent event) {
-        if(Config.getBoolean("settings.discord.enable")) {
+        if (Config.getBoolean("settings.discord.enable")) {
             Player player = event.getPlayer();
             TextChannel channel = BeacmcStaffWork.getDiscordBot().getJDA().getGuildById(Long.valueOf(Config.getString("settings.discord.guild-id"))).getTextChannelById(Long.valueOf(Config.getString("settings.discord.on-enable-work.channel-id")));
-            if(channel == null)
+            if (channel == null) {
+                Bukkit.getLogger().info("Channel is null");
                 return;
-            String title = PlaceholderAPI.setPlaceholders(player, Config.getString("settings.discord.on-enable-work.title"));
+            }
+
+            String title = Config.getString("settings.discord.on-enable-work.title");
+            Bukkit.getLogger().info("Title: " + title);
+            if (title != null) {
+                title = PlaceholderAPI.setPlaceholders(player, title);
+            }
             String titleUrl = Config.getString("settings.discord.on-enable-work.title-url");
-            String author = PlaceholderAPI.setPlaceholders(player, PlaceholderAPI.setPlaceholders(player, Config.getString("settings.discord.on-enable-work.author-name")));
+            Bukkit.getLogger().info("Title URL: " + titleUrl);
+            String author = Config.getString("settings.discord.on-enable-work.author-name");
+            Bukkit.getLogger().info("Author: " + author);
+            if (author != null) {
+                author = PlaceholderAPI.setPlaceholders(player, PlaceholderAPI.setPlaceholders(player, author));
+            }
             String authorIcon = Config.getString("settings.discord.on-enable-work.author-icon-url");
+            Bukkit.getLogger().info("Author Icon URL: " + authorIcon);
             String image = Config.getString("settings.discord.on-enable-work.image-url");
-            String description = PlaceholderAPI.setPlaceholders(player, Config.getString("settings.discord.on-enable-work.description"));
+            Bukkit.getLogger().info("Image URL: " + image);
+            String description = Config.getString("settings.discord.on-enable-work.description");
+            Bukkit.getLogger().info("Description: " + description);
+            if (description != null) {
+                description = PlaceholderAPI.setPlaceholders(player, description);
+            }
             String color = Config.getString("settings.discord.on-enable-work.color");
+            Bukkit.getLogger().info("Color: " + color);
+
             channel.sendMessageEmbeds(Embed.of(title, titleUrl, author, authorIcon, image, description, color).build()).queue();
         }
     }

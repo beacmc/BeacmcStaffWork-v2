@@ -1,4 +1,4 @@
-package com.beacmc.beacmcstaffwork.manager;
+package com.beacmc.beacmcstaffwork.manager.handler;
 
 import me.leoko.advancedban.utils.Punishment;
 import me.leoko.advancedban.utils.PunishmentType;

@@ -1,4 +1,4 @@
-package com.beacmc.beacmcstaffwork.manager;
+package com.beacmc.beacmcstaffwork.util;
 
 
 import org.bukkit.command.CommandSender;

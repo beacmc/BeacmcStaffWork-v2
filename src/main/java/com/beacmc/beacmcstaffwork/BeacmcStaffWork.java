@@ -12,10 +12,10 @@ import com.beacmc.beacmcstaffwork.lib.LibraryManager;
 import com.beacmc.beacmcstaffwork.listener.ABListener;
 import com.beacmc.beacmcstaffwork.listener.CommandListener;
 import com.beacmc.beacmcstaffwork.listener.MainListener;
-import com.beacmc.beacmcstaffwork.manager.Color;
-import com.beacmc.beacmcstaffwork.manager.CooldownManager;
-import com.beacmc.beacmcstaffwork.manager.LiteBansHandler;
-import com.beacmc.beacmcstaffwork.manager.UpdateChecker;
+import com.beacmc.beacmcstaffwork.util.Color;
+import com.beacmc.beacmcstaffwork.util.CooldownManager;
+import com.beacmc.beacmcstaffwork.manager.handler.LiteBansHandler;
+import com.beacmc.beacmcstaffwork.util.UpdateChecker;
 import com.beacmc.beacmcstaffwork.manager.configuration.Config;
 import com.beacmc.beacmcstaffwork.messaging.MessagingListener;
 import net.luckperms.api.LuckPerms;
@@ -23,10 +23,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.messaging.Messenger;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 
 public final class BeacmcStaffWork extends JavaPlugin {
 
@@ -141,6 +138,13 @@ public final class BeacmcStaffWork extends JavaPlugin {
     public static BeacmcStaffWork getInstance() {
         return instance;
     }
+
+    @Override
+    public void reloadConfig() {
+        super.reloadConfig();
+        Config.reload();
+    }
+
 
     public static LuckPerms getLuckPerms() {
         return luckPerms;

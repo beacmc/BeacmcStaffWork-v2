@@ -4,10 +4,11 @@ import com.beacmc.beacmcstaffwork.BeacmcStaffWork;
 import com.beacmc.beacmcstaffwork.database.Database;
 import com.beacmc.beacmcstaffwork.database.dao.UserDao;
 import com.beacmc.beacmcstaffwork.database.model.User;
-import com.beacmc.beacmcstaffwork.manager.AdvancedBanHandler;
-import com.beacmc.beacmcstaffwork.manager.StaffPlayer;
+import com.beacmc.beacmcstaffwork.manager.handler.AdvancedBanHandler;
+import com.beacmc.beacmcstaffwork.manager.player.StaffPlayer;
 import me.leoko.advancedban.bukkit.event.PunishmentEvent;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 

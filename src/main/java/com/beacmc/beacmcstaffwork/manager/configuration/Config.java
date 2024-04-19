@@ -8,9 +8,11 @@ import java.util.List;
 
 public class Config {
 
-    private static final FileConfiguration config;
+    private static FileConfiguration config;
 
-
+    public static void reload() {
+        config = BeacmcStaffWork.getInstance().getConfig();
+    }
     public static String getString(String path) {
         assert config.getString(path) != null;
         return config.getString(path);
