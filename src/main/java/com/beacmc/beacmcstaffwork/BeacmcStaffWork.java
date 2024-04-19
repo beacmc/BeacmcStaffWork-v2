@@ -27,8 +27,6 @@ import java.util.*;
 
 public final class BeacmcStaffWork extends JavaPlugin {
 
-
-
     private static LuckPerms luckPerms;
     private static DiscordBot discordBot;
     private static BeacmcStaffWork instance;
