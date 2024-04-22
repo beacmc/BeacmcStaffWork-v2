@@ -1,5 +1,6 @@
 package com.beacmc.beacmcstaffwork;
 
+import com.beacmc.beacmcstaffwork.action.*;
 import com.beacmc.beacmcstaffwork.api.action.ActionManager;
 import com.beacmc.beacmcstaffwork.commands.StaffAdminCommand;
 import com.beacmc.beacmcstaffwork.commands.StaffChatCommand;
@@ -45,6 +46,8 @@ public final class BeacmcStaffWork extends JavaPlugin {
         database = new Database();
         database.connect();
         actionManager = new ActionManager();
+
+        actionManager.registerActions(new ConsoleAction(), new PlayerAction(), new SoundAction(), new MessageToModeratosAction(), new MessageAction(), new BroadcastAction(), new ActionbarAction());
 
         update();
         this.luckPerms = this.getServer().getServicesManager().load(LuckPerms.class);

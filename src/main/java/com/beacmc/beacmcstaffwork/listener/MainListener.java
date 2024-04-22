@@ -4,7 +4,7 @@ import com.beacmc.beacmcstaffwork.BeacmcStaffWork;
 import com.beacmc.beacmcstaffwork.api.event.PlayerDisableWorkEvent;
 import com.beacmc.beacmcstaffwork.api.event.PlayerEnableWorkEvent;
 import com.beacmc.beacmcstaffwork.discord.Embed;
-import com.beacmc.beacmcstaffwork.manager.core.Actions;
+import com.beacmc.beacmcstaffwork.manager.core.ActionExecute;
 import com.beacmc.beacmcstaffwork.manager.player.StaffPlayer;
 import com.beacmc.beacmcstaffwork.manager.configuration.Config;
 import com.beacmc.beacmcstaffwork.util.Message;
@@ -106,7 +106,8 @@ public class MainListener implements Listener {
         Player player = event.getPlayer();
         if (users.contains(player)) {
             StaffPlayer staffPlayer = new StaffPlayer(player);
-            Actions.start(Config.getStringList("settings.actions." + staffPlayer.getPrimaryGroup() + ".disable-work"), staffPlayer.getPlayer());
+            //Actions.start(Config.getStringList("settings.actions." + staffPlayer.getPrimaryGroup() + ".disable-work"), staffPlayer.getPlayer());
+            ActionExecute.execute(staffPlayer, Config.getStringList("settings.actions." + staffPlayer.getPrimaryGroup() + ".disable-work"));
             staffPlayer.stopWork();
             Bukkit.getPluginManager().callEvent(new PlayerDisableWorkEvent(staffPlayer.getPlayer()));
             users.remove(player);
