@@ -16,12 +16,8 @@ import org.bukkit.entity.Player;
 
 public class StaffCommand extends CommandManager {
 
-    LuckPerms luckPerms;
-
+    private static LuckPerms luckPerms;
     private static CooldownManager manager;
-
-
-
 
     public StaffCommand(LuckPerms luckPerms) {
         super("staffwork");
@@ -30,7 +26,7 @@ public class StaffCommand extends CommandManager {
     }
 
     public void execute(CommandSender sender, org.bukkit.command.Command command, String label, String[] args) {
-        if (!(sender instanceof Player)) return;
+
 
         StaffPlayer moderator = new StaffPlayer((Player) sender);
 
@@ -38,7 +34,7 @@ public class StaffCommand extends CommandManager {
             moderator.sendMessage("settings.messages.no-permission");
             return;
         }
-
+        if (!(sender instanceof Player)) return;
         manager = BeacmcStaffWork.cooldowns.get(moderator.getName());
 
         if(manager == null) {

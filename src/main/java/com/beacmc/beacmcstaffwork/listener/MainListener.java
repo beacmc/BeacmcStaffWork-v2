@@ -25,7 +25,7 @@ import java.util.HashSet;
 
 public class MainListener implements Listener {
 
-    private HashSet users;
+    private HashSet<StaffPlayer> users;
 
     public MainListener() {
         users = BeacmcStaffWork.getUsers();
@@ -117,7 +117,7 @@ public class MainListener implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         StaffPlayer staffPlayer = new StaffPlayer(event.getPlayer());
         if(staffPlayer.isWork())
-            users.add(event.getPlayer());
+            users.add(staffPlayer);
     }
 
     @EventHandler

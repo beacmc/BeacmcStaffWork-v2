@@ -1,6 +1,5 @@
 package com.beacmc.beacmcstaffwork;
 
-import com.beacmc.beacmcstaffwork.api.action.AbstractAction;
 import com.beacmc.beacmcstaffwork.api.action.ActionManager;
 import com.beacmc.beacmcstaffwork.commands.StaffAdminCommand;
 import com.beacmc.beacmcstaffwork.commands.StaffChatCommand;
@@ -22,7 +21,6 @@ import com.beacmc.beacmcstaffwork.util.UpdateChecker;
 import com.beacmc.beacmcstaffwork.manager.configuration.Config;
 import com.beacmc.beacmcstaffwork.messaging.MessagingListener;
 import net.luckperms.api.LuckPerms;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.messaging.Messenger;
 

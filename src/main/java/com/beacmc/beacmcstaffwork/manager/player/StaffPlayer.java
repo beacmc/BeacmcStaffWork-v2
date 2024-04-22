@@ -47,8 +47,8 @@ public class StaffPlayer {
 
         try {
             long time = (System.currentTimeMillis() - user.getWorkStart()) / 1000;
-            BeacmcStaffWork.getUsers().remove(player);
             database.getUserDao().update(user.setTime(time + user.getTime()).setWork(false).setWorkStart(0));
+            BeacmcStaffWork.getUsers().remove(this);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -64,8 +64,8 @@ public class StaffPlayer {
                 user = new User(player.getName().toLowerCase(), null, true, 0, 0, 0, 0, 0, 0);
                 database.getUserDao().createOrUpdate(user);
             }
-            BeacmcStaffWork.getUsers().add(player);
             database.getUserDao().update(user.setWorkStart(System.currentTimeMillis()).setWork(true));
+            BeacmcStaffWork.getUsers().add(this);
         } catch (SQLException e) {
             e.printStackTrace();
         }

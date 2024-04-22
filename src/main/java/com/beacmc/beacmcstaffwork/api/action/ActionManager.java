@@ -1,6 +1,6 @@
 package com.beacmc.beacmcstaffwork.api.action;
 
-import com.beacmc.beacmcstaffwork.api.action.model.Action;
+import com.beacmc.beacmcstaffwork.api.action.Action;
 import org.bukkit.Bukkit;
 
 import java.util.HashSet;
@@ -49,5 +49,9 @@ public class ActionManager {
                 return true;
         }
         return false;
+    }
+
+    public HashSet<Action> getRegisterActions() {
+        return registerActions;
     }
 }
