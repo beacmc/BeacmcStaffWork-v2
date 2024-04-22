@@ -1,5 +1,7 @@
 package com.beacmc.beacmcstaffwork;
 
+import com.beacmc.beacmcstaffwork.api.action.AbstractAction;
+import com.beacmc.beacmcstaffwork.api.action.ActionManager;
 import com.beacmc.beacmcstaffwork.commands.StaffAdminCommand;
 import com.beacmc.beacmcstaffwork.commands.StaffChatCommand;
 import com.beacmc.beacmcstaffwork.commands.StaffCommand;
@@ -12,6 +14,7 @@ import com.beacmc.beacmcstaffwork.lib.LibraryManager;
 import com.beacmc.beacmcstaffwork.listener.ABListener;
 import com.beacmc.beacmcstaffwork.listener.CommandListener;
 import com.beacmc.beacmcstaffwork.listener.MainListener;
+import com.beacmc.beacmcstaffwork.manager.player.StaffPlayer;
 import com.beacmc.beacmcstaffwork.util.Color;
 import com.beacmc.beacmcstaffwork.util.CooldownManager;
 import com.beacmc.beacmcstaffwork.manager.handler.LiteBansHandler;
@@ -31,7 +34,8 @@ public final class BeacmcStaffWork extends JavaPlugin {
     private static DiscordBot discordBot;
     private static BeacmcStaffWork instance;
     private static Database database;
-    private static HashSet<Player> users = new HashSet<>();
+    private static ActionManager actionManager;
+    private static HashSet<StaffPlayer> users = new HashSet<>();
 
     public static Map<String, CooldownManager> cooldowns = new HashMap<>();
 
@@ -42,6 +46,7 @@ public final class BeacmcStaffWork extends JavaPlugin {
         instance = this;
         database = new Database();
         database.connect();
+        actionManager = new ActionManager();
 
         update();
         this.luckPerms = this.getServer().getServicesManager().load(LuckPerms.class);
@@ -152,7 +157,11 @@ public final class BeacmcStaffWork extends JavaPlugin {
         return discordBot;
     }
 
-    public static HashSet<Player> getUsers() {
+    public static HashSet<StaffPlayer> getUsers() {
         return users;
+    }
+
+    public static ActionManager getActionManager() {
+        return actionManager;
     }
 }
