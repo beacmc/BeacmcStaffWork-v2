@@ -27,6 +27,10 @@ public class Config {
         return config.getStringList(path);
     }
 
+    public static boolean contains(String path) {
+        return config.contains(path);
+    }
+
     public static Integer getInteger(String path) {
         return config.getInt(path);
     }
