@@ -11,7 +11,10 @@ import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class StaffPlayer {
 
@@ -101,6 +104,18 @@ public class StaffPlayer {
     public String getPrimaryGroup() {
         net.luckperms.api.model.user.User user = luckPerms.getPlayerAdapter(Player.class).getUser(player);
         return user.getPrimaryGroup();
+    }
+
+    public Set<String> getUserGroups() {
+        net.luckperms.api.model.user.User user = luckPerms.getUserManager().getUser(player.getUniqueId());
+        if (user == null) {
+            return Collections.emptySet();
+        }
+
+        return user.getInheritedGroups(user.getQueryOptions())
+                .stream()
+                .map(net.luckperms.api.model.group.Group::getName)
+                .collect(Collectors.toSet());
     }
 
 

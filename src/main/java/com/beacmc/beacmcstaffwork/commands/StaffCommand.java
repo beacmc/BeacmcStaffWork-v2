@@ -13,6 +13,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Set;
+
 
 public class StaffCommand extends CommandManager {
 
@@ -54,11 +56,14 @@ public class StaffCommand extends CommandManager {
             return;
         }
 
-        if(Config.getString("settings.actions." + moderator.getPrimaryGroup()) == null) {
+        Set<String> groups = moderator.getUserGroups();
+        boolean hasConfiguredGroup = groups.stream()
+                .anyMatch(group -> Config.contains("settings.actions." + group));
+
+        if (!hasConfiguredGroup) {
             moderator.sendMessage("settings.messages.no-group");
             return;
         }
-
         if(moderator.isWork()) {
             moderator.sendTitle("settings.titles.on-disable-work.title", "settings.titles.on-disable-work.subtitle");
             moderator.stopWork();
