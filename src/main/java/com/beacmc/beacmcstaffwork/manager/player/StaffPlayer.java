@@ -5,15 +5,13 @@ import com.beacmc.beacmcstaffwork.database.Database;
 import com.beacmc.beacmcstaffwork.database.model.User;
 import com.beacmc.beacmcstaffwork.util.Color;
 import com.beacmc.beacmcstaffwork.manager.configuration.Config;
+import me.clip.placeholderapi.PlaceholderAPI;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class StaffPlayer {
@@ -62,7 +60,6 @@ public class StaffPlayer {
             return;
 
         try {
-
             if(!isModerator()) {
                 user = new User(player.getName().toLowerCase(), null, true, 0, 0, 0, 0, 0, 0);
                 database.getUserDao().createOrUpdate(user);
@@ -106,19 +103,6 @@ public class StaffPlayer {
         return user.getPrimaryGroup();
     }
 
-    public Set<String> getUserGroups() {
-        net.luckperms.api.model.user.User user = luckPerms.getUserManager().getUser(player.getUniqueId());
-        if (user == null) {
-            return Collections.emptySet();
-        }
-
-        return user.getInheritedGroups(user.getQueryOptions())
-                .stream()
-                .map(net.luckperms.api.model.group.Group::getName)
-                .collect(Collectors.toSet());
-    }
-
-
     public void sendMessage(String path) {
         if(Config.getString(path) == null || Config.getString(path).isEmpty())
             return;
@@ -137,9 +121,12 @@ public class StaffPlayer {
 
 
     public void sendMessageList(String path) {
-        ArrayList<String> lines = new ArrayList<>(Config.getStringList(path));
-        for (String execute : lines) {
-            player.sendMessage(Color.compile(execute));
+        List<String> lines = Config.getStringList(path).stream()
+                .map(x -> Color.compile(x.replace("{PREFIX}", Config.getString("settings.prefix"))))
+                .collect(Collectors.toList());
+
+        for (String line : lines) {
+            player.sendMessage(PlaceholderAPI.setPlaceholders(player, line));
         }
     }
 

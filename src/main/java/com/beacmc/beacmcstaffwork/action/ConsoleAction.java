@@ -19,7 +19,6 @@ public class ConsoleAction extends Action {
 
     @Override
     public void execute(StaffPlayer staffPlayer, String params) {
-        System.out.println(params);
         Bukkit.dispatchCommand(
                 Bukkit.getConsoleSender(),
                 PlaceholderAPI.setPlaceholders(staffPlayer.getPlayer(), params));
