@@ -4,7 +4,6 @@ import com.beacmc.beacmcstaffwork.BeacmcStaffWork;
 import com.beacmc.beacmcstaffwork.api.action.ActionManager;
 import com.beacmc.beacmcstaffwork.api.action.Action;
 import com.beacmc.beacmcstaffwork.manager.player.StaffPlayer;
-import org.bukkit.entity.Player;
 
 import java.util.List;
 
