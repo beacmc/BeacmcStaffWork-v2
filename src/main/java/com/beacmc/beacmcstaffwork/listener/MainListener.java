@@ -4,6 +4,7 @@ import com.beacmc.beacmcstaffwork.BeacmcStaffWork;
 import com.beacmc.beacmcstaffwork.api.event.PlayerDisableWorkEvent;
 import com.beacmc.beacmcstaffwork.api.event.PlayerEnableWorkEvent;
 import com.beacmc.beacmcstaffwork.discord.Embed;
+import com.beacmc.beacmcstaffwork.manager.StaffWorkManager;
 import com.beacmc.beacmcstaffwork.manager.core.ActionExecute;
 import com.beacmc.beacmcstaffwork.manager.player.StaffPlayer;
 import com.beacmc.beacmcstaffwork.manager.configuration.Config;
@@ -26,9 +27,11 @@ import java.util.HashSet;
 public class MainListener implements Listener {
 
     private HashSet<StaffPlayer> users;
+    private StaffWorkManager manager;
 
     public MainListener() {
-        users = BeacmcStaffWork.getUsers();
+        manager = BeacmcStaffWork.getStaffWorkManager();
+        users = manager.getStaffPlayers();
     }
 
 
@@ -41,7 +44,7 @@ public class MainListener implements Listener {
         if(event.getDamager() instanceof Player) {
             Player damager = (Player) event.getDamager();
 
-            if(users.contains(damager)) {
+            if(manager.contains(damager)) {
                 event.getDamager().sendMessage(Message.fromConfig("settings.messages.entity-damage-on-work"));
                 event.setCancelled(true);
             }
@@ -49,7 +52,7 @@ public class MainListener implements Listener {
         if(event.getEntity() instanceof Player) {
             Player damaged = (Player) event.getEntity();
 
-            if(users.contains(damaged)) {
+            if(manager.contains(damaged)) {
                 if((event.getDamager() instanceof Player))
                     event.getDamager().sendMessage(Message.fromConfig("settings.messages.damager-damage-on-work"));
 
@@ -63,10 +66,10 @@ public class MainListener implements Listener {
         if(!Config.getBoolean("settings.work.disable-pick-up-item"))
             return;
 
-        Player user = event.getPlayer();
+        Player player = event.getPlayer();
 
-        if(users.contains(user)) {
-            user.sendMessage(Message.fromConfig("settings.messages.pick-up-item-on-work"));
+        if(manager.contains(player)) {
+            player.sendMessage(Message.fromConfig("settings.messages.pick-up-item-on-work"));
             event.setCancelled(true);
         }
     }
@@ -75,11 +78,11 @@ public class MainListener implements Listener {
     public void onBlockPlace(BlockPlaceEvent event) {
         if(!Config.getBoolean("settings.work.disable-place-block"))
             return;
-        Player user = event.getPlayer();
+        Player player = event.getPlayer();
 
-        if(users.contains(user)) {
+        if(manager.contains(player)) {
             event.setCancelled(true);
-            user.sendMessage(Message.fromConfig("settings.messages.block-place-on-work"));
+            player.sendMessage(Message.fromConfig("settings.messages.block-place-on-work"));
         }
 
     }
@@ -89,13 +92,12 @@ public class MainListener implements Listener {
         if(!Config.getBoolean("settings.work.disable-break-block"))
             return;
 
-        Player user = event.getPlayer();
+        Player player = event.getPlayer();
 
-        if(users.contains(user)) {
+        if(manager.contains(player)) {
             event.setCancelled(true);
-            user.sendMessage(Message.fromConfig("settings.messages.block-break-on-work"));
+            player.sendMessage(Message.fromConfig("settings.messages.block-break-on-work"));
         }
-
     }
 
     @EventHandler
@@ -104,13 +106,12 @@ public class MainListener implements Listener {
             return;
 
         Player player = event.getPlayer();
-        if (users.contains(player)) {
+        if (manager.contains(player)) {
             StaffPlayer staffPlayer = new StaffPlayer(player);
-            //Actions.start(Config.getStringList("settings.actions." + staffPlayer.getPrimaryGroup() + ".disable-work"), staffPlayer.getPlayer());
             ActionExecute.execute(staffPlayer, Config.getStringList("settings.actions." + staffPlayer.getPrimaryGroup() + ".disable-work"));
             staffPlayer.stopWork();
             Bukkit.getPluginManager().callEvent(new PlayerDisableWorkEvent(staffPlayer.getPlayer()));
-            users.remove(player);
+            users.remove(staffPlayer);
         }
     }
 

@@ -14,9 +14,9 @@ import com.beacmc.beacmcstaffwork.lib.LibraryManager;
 import com.beacmc.beacmcstaffwork.listener.ABListener;
 import com.beacmc.beacmcstaffwork.listener.CommandListener;
 import com.beacmc.beacmcstaffwork.listener.MainListener;
+import com.beacmc.beacmcstaffwork.manager.StaffWorkManager;
 import com.beacmc.beacmcstaffwork.manager.player.StaffPlayer;
 import com.beacmc.beacmcstaffwork.util.Color;
-import com.beacmc.beacmcstaffwork.util.CooldownManager;
 import com.beacmc.beacmcstaffwork.manager.handler.LiteBansHandler;
 import com.beacmc.beacmcstaffwork.util.UpdateChecker;
 import com.beacmc.beacmcstaffwork.manager.configuration.Config;
@@ -34,9 +34,9 @@ public final class BeacmcStaffWork extends JavaPlugin {
     private static BeacmcStaffWork instance;
     private static Database database;
     private static ActionManager actionManager;
+    private static StaffWorkManager staffWorkManager;
     private static HashSet<StaffPlayer> users = new HashSet<>();
 
-    public static Map<String, CooldownManager> cooldowns = new HashMap<>();
 
     @Override
     public void onEnable() {
@@ -48,7 +48,7 @@ public final class BeacmcStaffWork extends JavaPlugin {
         actionManager = new ActionManager();
 
         actionManager.registerActions(new ConsoleAction(), new PlayerAction(), new SoundAction(), new MessageToModeratosAction(), new MessageAction(), new BroadcastAction(), new ActionbarAction());
-
+        staffWorkManager = new StaffWorkManager();
         update();
         this.luckPerms = this.getServer().getServicesManager().load(LuckPerms.class);
         new StaffCommand(this.luckPerms);
@@ -149,6 +149,9 @@ public final class BeacmcStaffWork extends JavaPlugin {
         Config.reload();
     }
 
+    public static StaffWorkManager getStaffWorkManager() {
+        return staffWorkManager;
+    }
 
     public static LuckPerms getLuckPerms() {
         return luckPerms;

@@ -1,7 +1,9 @@
 package com.beacmc.beacmcstaffwork.listener;
 
 import com.beacmc.beacmcstaffwork.BeacmcStaffWork;
+import com.beacmc.beacmcstaffwork.manager.StaffWorkManager;
 import com.beacmc.beacmcstaffwork.manager.configuration.Config;
+import com.beacmc.beacmcstaffwork.manager.player.StaffPlayer;
 import com.beacmc.beacmcstaffwork.util.Message;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,10 +15,12 @@ import java.util.List;
 
 public class CommandListener implements Listener {
 
-    private HashSet users;
+    private HashSet<StaffPlayer> users;
+    private StaffWorkManager manager;
 
     public CommandListener() {
-        users = BeacmcStaffWork.getUsers();
+        manager = BeacmcStaffWork.getStaffWorkManager();
+        users = manager.getStaffPlayers();
     }
 
     @EventHandler
@@ -25,7 +29,7 @@ public class CommandListener implements Listener {
             return;
 
         Player player = event.getPlayer();
-        if(!users.contains(player)) {
+        if(!manager.contains(player)) {
             List<String> disableCommands = Config.getStringList("settings.work.commands.disable-commands");
             String cmd = event.getMessage().split(" ")[0];
             if(disableCommands.contains(cmd.toLowerCase())) {
