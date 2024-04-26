@@ -21,7 +21,8 @@ public class StaffAdminCompleter implements TabCompleter {
             return null;
 
         if(args.length == 2) {
-            if(!args[0].equalsIgnoreCase("reset"))
+            if(!args[0].equalsIgnoreCase("reset")
+                    || !args[0].equalsIgnoreCase("stats"))
                 return null;
 
             ArrayList<String> list = new ArrayList<>();
@@ -52,7 +53,7 @@ public class StaffAdminCompleter implements TabCompleter {
 
 
     private static List<String> getCompletionsOneArgs() {
-        return List.of("reload", "reset");
+        return List.of("reload", "reset", "stats");
     }
 
     private static List<String> getCompletionsTwoArgs() {

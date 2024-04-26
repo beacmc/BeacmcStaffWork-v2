@@ -5,16 +5,19 @@ import com.beacmc.beacmcstaffwork.database.dao.UserDao;
 import com.beacmc.beacmcstaffwork.database.model.User;
 import com.beacmc.beacmcstaffwork.util.Color;
 import com.beacmc.beacmcstaffwork.manager.command.CommandManager;
-import com.beacmc.beacmcstaffwork.util.CooldownManager;
 import com.beacmc.beacmcstaffwork.manager.configuration.Config;
+import me.clip.placeholderapi.PlaceholderAPI;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class StaffAdminCommand extends CommandManager {
 
-    private static CooldownManager manager;
 
     public StaffAdminCommand() {
         super("staffworkadmin");
@@ -22,42 +25,41 @@ public class StaffAdminCommand extends CommandManager {
 
     @Override
     public void execute(CommandSender sender, Command command, String label, String[] args) {
-
-        manager = BeacmcStaffWork.cooldowns.get(sender.getName());
-
-        if(manager == null) {
-            BeacmcStaffWork.cooldowns.put(sender.getName(), new CooldownManager(sender));
-            manager = new CooldownManager(sender);
-        }
-        if (manager.isCooldown()){
-            sender.sendMessage(
-                    Color.compile(Config.getString("settings.messages.cooldown")
-                            .replace("{PREFIX}", Config.getString("settings.prefix")))
-            );
+        if (!sender.hasPermission("beacmcstaffwork.admin")){
+            sendHelp(sender);
             return;
         }
-
-        manager.execute(10000);
 
         if(args.length == 1) {
             if(!args[0].equalsIgnoreCase("reload"))
                 return;
-            if (!sender.hasPermission("beacmcstaffwork.admin")){
-                sendHelp(sender);
-                return;
-            }
+
             BeacmcStaffWork.getInstance().reloadConfig();
             sender.sendMessage(Color.compile(Config.getString("settings.messages.reload")
                     .replace("{PREFIX}", Config.getString("settings.prefix"))
             ));
+        } else if (args.length == 2) {
+            if(!args[0].equalsIgnoreCase("stats"))
+                return;
+
+            Player player = Bukkit.getPlayer(args[1]);
+            if(player == null) {
+                sender.sendMessage(Color.compile(Config.getString("settings.messages.player-offline")
+                        .replace("{PREFIX}", Config.getString("settings.prefix"))
+                ));
+                return;
+            }
+            List<String> lines = Config.getStringList("settings.messages.stats").stream()
+                    .map(x -> Color.compile(x.replace("{PREFIX}", Config.getString("settings.prefix"))))
+                    .collect(Collectors.toList());
+
+            for (String line : lines) {
+                player.sendMessage(PlaceholderAPI.setPlaceholders(player, line));
+            }
         } else if(args.length == 3) {
             if(!args[0].equalsIgnoreCase("reset"))
                 return;
 
-            if (!sender.hasPermission("beacmcstaffwork.admin")){
-                sendHelp(sender);
-                return;
-            }
             try {
                 UserDao userDao = BeacmcStaffWork.getDatabase().getUserDao();
                 User user = userDao.queryForId(args[1].toLowerCase());
