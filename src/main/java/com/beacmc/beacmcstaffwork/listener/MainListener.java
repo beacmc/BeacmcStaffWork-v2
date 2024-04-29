@@ -44,6 +44,9 @@ public class MainListener implements Listener {
         if(event.getDamager() instanceof Player) {
             Player damager = (Player) event.getDamager();
 
+            if(Config.getBoolean("settings.work.enable-bypass-permission") && damager.hasPermission("beacmcstaffwork.work-limits.bypass"))
+                return;
+
             if(manager.contains(damager)) {
                 event.getDamager().sendMessage(Message.fromConfig("settings.messages.entity-damage-on-work"));
                 event.setCancelled(true);
@@ -51,6 +54,9 @@ public class MainListener implements Listener {
         }
         if(event.getEntity() instanceof Player) {
             Player damaged = (Player) event.getEntity();
+
+            if(Config.getBoolean("settings.work.enable-bypass-permission") && damaged.hasPermission("beacmcstaffwork.work-limits.bypass"))
+                return;
 
             if(manager.contains(damaged)) {
                 if((event.getDamager() instanceof Player))
@@ -68,6 +74,9 @@ public class MainListener implements Listener {
 
         Player player = event.getPlayer();
 
+        if(Config.getBoolean("settings.work.enable-bypass-permission") && player.hasPermission("beacmcstaffwork.work-limits.bypass"))
+            return;
+
         if(manager.contains(player)) {
             player.sendMessage(Message.fromConfig("settings.messages.pick-up-item-on-work"));
             event.setCancelled(true);
@@ -78,7 +87,11 @@ public class MainListener implements Listener {
     public void onBlockPlace(BlockPlaceEvent event) {
         if(!Config.getBoolean("settings.work.disable-place-block"))
             return;
+
         Player player = event.getPlayer();
+
+        if(Config.getBoolean("settings.work.enable-bypass-permission") && player.hasPermission("beacmcstaffwork.work-limits.bypass"))
+            return;
 
         if(manager.contains(player)) {
             event.setCancelled(true);
@@ -94,6 +107,9 @@ public class MainListener implements Listener {
 
         Player player = event.getPlayer();
 
+        if(Config.getBoolean("settings.work.enable-bypass-permission") && player.hasPermission("beacmcstaffwork.work-limits.bypass"))
+            return;
+
         if(manager.contains(player)) {
             event.setCancelled(true);
             player.sendMessage(Message.fromConfig("settings.messages.block-break-on-work"));
@@ -106,6 +122,10 @@ public class MainListener implements Listener {
             return;
 
         Player player = event.getPlayer();
+
+        if(Config.getBoolean("settings.work.enable-bypass-permission") && player.hasPermission("beacmcstaffwork.work-limits.bypass"))
+            return;
+
         if (manager.contains(player)) {
             StaffPlayer staffPlayer = new StaffPlayer(player);
             ActionExecute.execute(staffPlayer, Config.getStringList("settings.actions." + staffPlayer.getPrimaryGroup() + ".disable-work"));

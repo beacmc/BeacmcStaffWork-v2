@@ -6,7 +6,7 @@
 
     <groupId>com.beacmc</groupId>
     <artifactId>BeacmcStaffWork</artifactId>
-    <version>v2.3-BETA</version>
+    <version>v2.4-STABLE</version>
     <packaging>jar</packaging>
 
     <name>BeacmcStaffWork</name>
@@ -33,6 +33,14 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>9</source>
+                    <target>9</target>
+                </configuration>
             </plugin>
         </plugins>
         <resources>
@@ -94,6 +102,11 @@
             <artifactId>paper-api</artifactId>
             <version>1.16.5-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.devoirr</groupId>
+            <artifactId>GUILib</artifactId>
+            <version>1.0.2</version>
         </dependency>
         <dependency>
             <groupId>net.luckperms</groupId>

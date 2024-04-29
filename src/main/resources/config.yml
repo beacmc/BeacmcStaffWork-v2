@@ -154,6 +154,13 @@ settings:
 
   work:
 
+    # если включено, то на игроков
+    # у которых есть право
+    # beacmcstaffwork.work-limits.bypass
+    # не будут действовать ограничения
+    enable-bypass-permission: true
+
+    # Отключать режим работы при выходе с сервера
     disable-work-on-quit: true
 
     # блокировать ломание блоков во время работы

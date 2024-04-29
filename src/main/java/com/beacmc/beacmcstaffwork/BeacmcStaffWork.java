@@ -14,6 +14,7 @@ import com.beacmc.beacmcstaffwork.lib.LibraryManager;
 import com.beacmc.beacmcstaffwork.listener.ABListener;
 import com.beacmc.beacmcstaffwork.listener.CommandListener;
 import com.beacmc.beacmcstaffwork.listener.MainListener;
+import com.beacmc.beacmcstaffwork.listener.PluginListener;
 import com.beacmc.beacmcstaffwork.manager.StaffWorkManager;
 import com.beacmc.beacmcstaffwork.manager.player.StaffPlayer;
 import com.beacmc.beacmcstaffwork.util.Color;
@@ -95,6 +96,7 @@ public final class BeacmcStaffWork extends JavaPlugin {
         }
 
         this.getServer().getPluginManager().registerEvents(new MainListener(), this);
+        this.getServer().getPluginManager().registerEvents(new PluginListener(), this);
         this.getServer().getPluginManager().registerEvents(new CommandListener(), this);
     }
 
@@ -152,6 +154,7 @@ public final class BeacmcStaffWork extends JavaPlugin {
     public static StaffWorkManager getStaffWorkManager() {
         return staffWorkManager;
     }
+
 
     public static LuckPerms getLuckPerms() {
         return luckPerms;
