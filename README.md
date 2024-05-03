@@ -4,6 +4,23 @@
 > The plugin requires Java 16 and server version 1.16
 > 
 # Developers
+
+## Dependency
+
+```xml
+<repository>
+    <id>jitpack.io</id>
+    <url>https://jitpack.io</url>
+</repository>
+
+<dependency>
+    <groupId>com.github.beacmc</groupId>
+    <artifactId>BeacmcStaffWork-v2</artifactId>
+    <version>v2.4-stable</version>
+</dependency>
+```
+
+## Create actions
 create a new `Action`
 
 ```java
