@@ -1,7 +1,7 @@
 package com.beacmc.beacmcstaffwork.database;
 
 import com.beacmc.beacmcstaffwork.BeacmcStaffWork;
-import com.beacmc.beacmcstaffwork.manager.configuration.Config;
+import com.beacmc.beacmcstaffwork.config.Config;
 
 public enum DatabaseType {
 

@@ -1,6 +1,6 @@
 package com.beacmc.beacmcstaffwork.util;
 
-import com.beacmc.beacmcstaffwork.manager.configuration.Config;
+import com.beacmc.beacmcstaffwork.config.Config;
 
 public class Message {
 

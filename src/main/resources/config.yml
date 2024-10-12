@@ -6,8 +6,13 @@ settings:
 
   chat-format: "&7[#FF8600&lSTAFFCHAT&7] &8&l| %luckperms_prefix%&7%player_name% &8&l> &f{MESSAGE}"
 
-  # PluginMessaging. Актуально для стафф чата.
+  # межсерверный стафф-чат. Будет работать на тех серверах
+  # где включён данный модуль
   proxy: false
+
+  # нужен ли включенный режим работы
+  # для добавления статистики в виде наказаний
+  required-work-on-add-statistic: true
 
   # информирование об обновлении плагина.
   update-check: true
@@ -50,7 +55,7 @@ settings:
         messages:
           link-success: "Аккаунт успешно привязан"
           no-args: "Недостаточно аргументов. Введите: `!привязать <игровой ник> <Discord ID>`"
-          no-player: "Недостаточно аргументов. Введите: `!привязать <игровой ник> <Discord ID>`"
+          no-player: "Игрок не найден в базе. Возможно он никогда не входил в режим работы."
           number-format-exception: "Ожидалось число во втором аргументе."
       stats-command:
         command: "!статистика"
@@ -140,7 +145,7 @@ settings:
         - '[console] lp user %player_name% parent add moder'
         - '[broadcast] %player_name% начал работу!'
       disable-work:
-        - '[console] lp user %player_name% parent remove moderator'
+        - '[console] lp user %player_name% parent remove moder'
         - '[broadcast] %player_name% закончил работу!'
 
     helper:
@@ -204,6 +209,11 @@ settings:
     statistic-reset: "{PREFIX} &7Статистика сброшена."
     disable-command: "{PREFIX} &7Эта команда запрещена вне режима работы."
     player-offline: "{PREFIX} &7Этот игрок не в сети"
+    swa-reset-error-use: "{PREFIX} &7Использование: #FF8A00/swa reset &7(#FF8A00&lигрок&7) &7(#FF8A00&lсчётчик&7)"
+    swa-stats-error-use: "{PREFIX} &7Использование: #FF8A00/swa stats &7(#FF8A00&lигрок&7)"
+    swa-delete-user-error-use: "{PREFIX}  &7Использование: #FF8A00/swa deleteuser &7(#FF8A00&lигрок&7)"
+    user-not-found: "{PREFIX} &7Пользователь не найден в базе данных"
+    user-deleted: "{PREFIX} &7Пользователь успешно удалён из базы данных"
     stats:
       - " "
       - " {PREFIX} &7Статистика модератора %player_name%"
@@ -220,8 +230,11 @@ settings:
     help:
       - " "
       - "#FF8600/sw &7- &fначать, либо начать работу"
+      - "#FF8600/sw stats &7- &fпосмотреть свою статистику"
       - ""
-      - "#FF8600/swa reload &7- &fперезапустить плагин"
+      - "#FF8600/swa reload &7- &fперезагрузить конфигурацию"
+      - "#FF8600/swa stats <игрок> &7- &fпосмотреть статистику модератора"
+      - "#FF8600/swa reset <игрок> <статистика> &7- &fсбросить статистику"
       - "  "
 
     update-check-console:

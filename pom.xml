@@ -6,7 +6,7 @@
 
     <groupId>com.beacmc</groupId>
     <artifactId>BeacmcStaffWork</artifactId>
-    <version>v2.4-STABLE</version>
+    <version>v2.7-BETA</version>
     <packaging>jar</packaging>
 
     <name>BeacmcStaffWork</name>
@@ -87,9 +87,6 @@
             <version>0.4.1</version>
             <scope>provided</scope>
         </dependency>
-
-        
-
         <dependency>
             <groupId>com.github.DevLeoko</groupId>
             <artifactId>AdvancedBan</artifactId>
@@ -102,11 +99,6 @@
             <artifactId>paper-api</artifactId>
             <version>1.16.5-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.github.devoirr</groupId>
-            <artifactId>GUILib</artifactId>
-            <version>1.0.2</version>
         </dependency>
         <dependency>
             <groupId>net.luckperms</groupId>
@@ -140,7 +132,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>30.1-jre</version> <!-- Или другая актуальная версия -->
+            <version>30.1-jre</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

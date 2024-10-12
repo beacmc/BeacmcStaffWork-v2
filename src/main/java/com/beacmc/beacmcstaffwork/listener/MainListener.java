@@ -1,13 +1,13 @@
 package com.beacmc.beacmcstaffwork.listener;
 
 import com.beacmc.beacmcstaffwork.BeacmcStaffWork;
+import com.beacmc.beacmcstaffwork.api.action.ActionManager;
 import com.beacmc.beacmcstaffwork.api.event.PlayerDisableWorkEvent;
 import com.beacmc.beacmcstaffwork.api.event.PlayerEnableWorkEvent;
 import com.beacmc.beacmcstaffwork.discord.Embed;
-import com.beacmc.beacmcstaffwork.manager.StaffWorkManager;
-import com.beacmc.beacmcstaffwork.manager.core.ActionExecute;
-import com.beacmc.beacmcstaffwork.manager.player.StaffPlayer;
-import com.beacmc.beacmcstaffwork.manager.configuration.Config;
+import com.beacmc.beacmcstaffwork.work.StaffWorkManager;
+import com.beacmc.beacmcstaffwork.player.StaffPlayer;
+import com.beacmc.beacmcstaffwork.config.Config;
 import com.beacmc.beacmcstaffwork.util.Message;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -18,7 +18,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -26,15 +28,15 @@ import java.util.HashSet;
 
 public class MainListener implements Listener {
 
-    private HashSet<StaffPlayer> users;
-    private StaffWorkManager manager;
+    private final HashSet<StaffPlayer> users;
+    private final StaffWorkManager manager;
+    private final ActionManager action;
 
     public MainListener() {
         manager = BeacmcStaffWork.getStaffWorkManager();
         users = manager.getStaffPlayers();
+        action = BeacmcStaffWork.getActionManager();
     }
-
-
 
     @EventHandler
     public void onDamage(EntityDamageByEntityEvent event) {
@@ -48,7 +50,7 @@ public class MainListener implements Listener {
                 return;
 
             if(manager.contains(damager)) {
-                event.getDamager().sendMessage(Message.fromConfig("settings.messages.entity-damage-on-work"));
+                sendMessage(damager, "settings.messages.entity-damage-on-work");
                 event.setCancelled(true);
             }
         }
@@ -60,8 +62,19 @@ public class MainListener implements Listener {
 
             if(manager.contains(damaged)) {
                 if((event.getDamager() instanceof Player))
-                    event.getDamager().sendMessage(Message.fromConfig("settings.messages.damager-damage-on-work"));
+                    sendMessage((Player) event.getDamager(), "settings.messages.damager-damage-on-work");
 
+                event.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onDamage(EntityDamageEvent event) {
+        if (event.getCause() == EntityDamageEvent.DamageCause.FALL && event.getEntity() instanceof Player) {
+            Player player = (Player) event.getEntity();
+
+            if (manager.contains(player)) {
                 event.setCancelled(true);
             }
         }
@@ -78,7 +91,7 @@ public class MainListener implements Listener {
             return;
 
         if(manager.contains(player)) {
-            player.sendMessage(Message.fromConfig("settings.messages.pick-up-item-on-work"));
+            sendMessage(player, "settings.messages.pick-up-item-on-work");
             event.setCancelled(true);
         }
     }
@@ -95,7 +108,7 @@ public class MainListener implements Listener {
 
         if(manager.contains(player)) {
             event.setCancelled(true);
-            player.sendMessage(Message.fromConfig("settings.messages.block-place-on-work"));
+            sendMessage(player, "settings.messages.block-place-on-work");
         }
 
     }
@@ -112,7 +125,7 @@ public class MainListener implements Listener {
 
         if(manager.contains(player)) {
             event.setCancelled(true);
-            player.sendMessage(Message.fromConfig("settings.messages.block-break-on-work"));
+            sendMessage(player, "settings.messages.block-break-on-work");
         }
     }
 
@@ -127,8 +140,27 @@ public class MainListener implements Listener {
             return;
 
         if (manager.contains(player)) {
-            StaffPlayer staffPlayer = new StaffPlayer(player);
-            ActionExecute.execute(staffPlayer, Config.getStringList("settings.actions." + staffPlayer.getPrimaryGroup() + ".disable-work"));
+            StaffPlayer staffPlayer = manager.getStaffPlayerByPlayer(player);
+            action.execute(staffPlayer, Config.getStringList("settings.actions." + staffPlayer.getPrimaryGroup() + ".disable-work"));
+            staffPlayer.stopWork();
+            Bukkit.getPluginManager().callEvent(new PlayerDisableWorkEvent(staffPlayer.getPlayer()));
+            users.remove(staffPlayer);
+        }
+    }
+
+    @EventHandler
+    public void onKick(PlayerKickEvent event) {
+        if(!Config.getBoolean("settings.work.disable-work-on-quit"))
+            return;
+
+        Player player = event.getPlayer();
+
+        if(Config.getBoolean("settings.work.enable-bypass-permission") && player.hasPermission("beacmcstaffwork.work-limits.bypass"))
+            return;
+
+        if (manager.contains(player)) {
+            StaffPlayer staffPlayer = manager.getStaffPlayerByPlayer(player);
+            action.execute(staffPlayer, Config.getStringList("settings.actions." + staffPlayer.getPrimaryGroup() + ".disable-work"));
             staffPlayer.stopWork();
             Bukkit.getPluginManager().callEvent(new PlayerDisableWorkEvent(staffPlayer.getPlayer()));
             users.remove(staffPlayer);
@@ -196,5 +228,13 @@ public class MainListener implements Listener {
             String color = Config.getString("settings.discord.on-disable-work.color");
             channel.sendMessageEmbeds(Embed.of(title, titleUrl, author, authorIcon, image, description, color).build()).queue();
         }
+    }
+
+    private void sendMessage(Player player, String path) {
+        String message = Config.getString(path);
+        if(message == null || message.isEmpty())
+            return;
+
+        player.sendMessage(Message.of(message));
     }
 }

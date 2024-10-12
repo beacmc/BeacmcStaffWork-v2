@@ -7,37 +7,41 @@ import com.j256.ormlite.table.DatabaseTable;
 public class User {
 
     @DatabaseField(columnName = "nickname", canBeNull = false, id = true)
-    public String nickname;
+    private String nickname;
 
     @DatabaseField(columnName = "password")
-    public String password;
+    private String password;
 
     @DatabaseField(columnName = "is_work", defaultValue = "false")
-    public boolean work;
+    private boolean work;
 
     @DatabaseField(columnName = "work_start", defaultValue = "0")
-    public long workStart;
+    private long workStart;
 
     @DatabaseField(columnName = "time", defaultValue = "0")
-    public long time;
+    private long time;
 
     @DatabaseField(columnName = "bans", defaultValue = "0")
-    public int bans;
+    private int bans;
 
     @DatabaseField(columnName = "mutes", defaultValue = "0")
-    public int mutes;
+    private int mutes;
 
     @DatabaseField(columnName = "kicks", defaultValue = "0")
-    public int kicks;
+    private int kicks;
+
+    @DatabaseField(columnName = "unbans", defaultValue = "0")
+    private int unbans;
+
+    @DatabaseField(columnName = "unmutes", defaultValue = "0")
+    private int unmutes;
 
     @DatabaseField(columnName = "discord_id", defaultValue = "0")
-    public long discordID;
-
-
+    private long discordID;
 
     public User() {}
 
-    public User(String nickname, String password, boolean work, long workStart, long time, int bans, int mutes, int kicks, long discordID) {
+    public User(String nickname, String password, boolean work, long workStart, long time, int bans, int mutes, int kicks, int unbans, int unmutes, long discordID) {
         setNickname(nickname);
         setPassword(password);
         setWork(work);
@@ -46,6 +50,8 @@ public class User {
         setBans(bans);
         setMutes(mutes);
         setKicks(kicks);
+        setUnbans(unbans);
+        setUnmutes(unmutes);
         setDiscordID(discordID);
     }
 
@@ -59,6 +65,24 @@ public class User {
 
     public User setDiscordID(long discordID) {
         this.discordID = discordID;
+        return this;
+    }
+
+    public int getUnbans() {
+        return unbans;
+    }
+
+    public int getUnmutes() {
+        return unmutes;
+    }
+
+    public User setUnbans(int unbans) {
+        this.unbans = unbans;
+        return this;
+    }
+
+    public User setUnmutes(int unmutes) {
+        this.unmutes = unmutes;
         return this;
     }
 

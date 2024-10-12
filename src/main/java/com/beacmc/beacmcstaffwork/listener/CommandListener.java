@@ -1,9 +1,9 @@
 package com.beacmc.beacmcstaffwork.listener;
 
 import com.beacmc.beacmcstaffwork.BeacmcStaffWork;
-import com.beacmc.beacmcstaffwork.manager.StaffWorkManager;
-import com.beacmc.beacmcstaffwork.manager.configuration.Config;
-import com.beacmc.beacmcstaffwork.manager.player.StaffPlayer;
+import com.beacmc.beacmcstaffwork.work.StaffWorkManager;
+import com.beacmc.beacmcstaffwork.config.Config;
+import com.beacmc.beacmcstaffwork.player.StaffPlayer;
 import com.beacmc.beacmcstaffwork.util.Message;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -28,11 +28,10 @@ public class CommandListener implements Listener {
         if(!Config.getBoolean("settings.work.commands.enable"))
             return;
 
+        final Player player = event.getPlayer();
 
-        Player player = event.getPlayer();
         if(Config.getBoolean("settings.work.enable-bypass-permission") && player.hasPermission("beacmcstaffwork.work-limits.bypass"))
             return;
-
 
         if(!manager.contains(player)) {
             List<String> disableCommands = Config.getStringList("settings.work.commands.disable-commands");

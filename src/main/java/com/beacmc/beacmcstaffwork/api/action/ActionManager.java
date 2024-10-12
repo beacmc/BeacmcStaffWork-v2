@@ -1,14 +1,16 @@
 package com.beacmc.beacmcstaffwork.api.action;
 
 import com.beacmc.beacmcstaffwork.BeacmcStaffWork;
+import com.beacmc.beacmcstaffwork.player.StaffPlayer;
 import org.bukkit.Bukkit;
 
 import java.util.HashSet;
+import java.util.List;
 
 public class ActionManager {
 
-    private HashSet<Action> registerActions;
-    private BeacmcStaffWork plugin;
+    private final HashSet<Action> registerActions;
+    private final BeacmcStaffWork plugin;
 
     public ActionManager() {
         plugin = BeacmcStaffWork.getInstance();
@@ -26,12 +28,7 @@ public class ActionManager {
 
     public void registerActions(Action... actions) {
         for(Action action : actions) {
-            if (isRegisterAction(action)) {
-                plugin.getLogger().severe("action " + action.getName() + " already registered");
-                continue;
-            }
-            plugin.getLogger().info("register action " + action.getName() + " - " + action.getDescription());
-            registerActions.add(action);
+            registerAction(action);
         }
     }
 
@@ -40,8 +37,11 @@ public class ActionManager {
             plugin.getLogger().severe("action " + action.getName() + " not registered");
             return;
         }
-        plugin.getLogger().info("unregister action " + action.getName() + " - " + action.getDescription());
         registerActions.remove(action);
+    }
+
+    public void unregisterAllActions() {
+        registerActions.forEach(this::unregisterAction);
     }
 
     public boolean isRegisterAction(Action action) {
@@ -51,6 +51,18 @@ public class ActionManager {
                 return true;
         }
         return false;
+    }
+
+    public void execute(StaffPlayer player, List<String> actions) {
+        for (String execute : actions) {
+            for (Action action : registerActions) {
+                String name = action.getName();
+                if (!execute.startsWith(name))
+                    continue;
+
+                action.execute(player, execute.replace(name, "").trim());
+            }
+        }
     }
 
     public HashSet<Action> getRegisterActions() {

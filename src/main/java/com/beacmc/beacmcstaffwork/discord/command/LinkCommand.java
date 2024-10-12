@@ -3,7 +3,7 @@ package com.beacmc.beacmcstaffwork.discord.command;
 import com.beacmc.beacmcstaffwork.BeacmcStaffWork;
 import com.beacmc.beacmcstaffwork.database.dao.UserDao;
 import com.beacmc.beacmcstaffwork.database.model.User;
-import com.beacmc.beacmcstaffwork.manager.configuration.Config;
+import com.beacmc.beacmcstaffwork.config.Config;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -35,7 +35,7 @@ public class LinkCommand extends ListenerAdapter {
                 User user = userDao.queryForId(args[1]);
 
                 if(user == null) {
-                    channel.sendMessage(Config.getString("settings.discord.commands.link-command.messages.no-user")).queue();
+                    channel.sendMessage(Config.getString("settings.discord.commands.link-command.messages.no-player")).queue();
                     return;
                 }
                 try {

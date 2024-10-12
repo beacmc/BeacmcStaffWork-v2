@@ -1,12 +1,12 @@
 package com.beacmc.beacmcstaffwork.api.action;
 
-import com.beacmc.beacmcstaffwork.manager.player.StaffPlayer;
+import com.beacmc.beacmcstaffwork.player.StaffPlayer;
 
-public abstract class Action {
+public interface Action {
 
-    public abstract String getName();
+    String getName();
 
-    public abstract String getDescription();
+    String getDescription();
 
-    public abstract void execute(StaffPlayer player, String params);
+    void execute(StaffPlayer player, String params);
 }

@@ -3,8 +3,8 @@ package com.beacmc.beacmcstaffwork.discord.command;
 import com.beacmc.beacmcstaffwork.BeacmcStaffWork;
 import com.beacmc.beacmcstaffwork.database.dao.UserDao;
 import com.beacmc.beacmcstaffwork.database.model.User;
-import com.beacmc.beacmcstaffwork.manager.core.Work;
-import com.beacmc.beacmcstaffwork.manager.configuration.Config;
+import com.beacmc.beacmcstaffwork.work.Work;
+import com.beacmc.beacmcstaffwork.config.Config;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -48,6 +48,8 @@ public class StatsCommand extends ListenerAdapter {
                                 .replace("{bans}", String.valueOf(user.getBans()))
                                 .replace("{mutes}", String.valueOf(user.getMutes()))
                                 .replace("{kicks}", String.valueOf(user.getKicks()))
+                                .replace("{unbans}", String.valueOf(user.getUnbans()))
+                                .replace("{unmutes}", String.valueOf(user.getUnmutes()))
 
                 ).queue();
             } catch (SQLException | IllegalArgumentException e) { }

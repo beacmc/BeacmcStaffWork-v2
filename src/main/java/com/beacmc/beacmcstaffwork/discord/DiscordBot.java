@@ -2,7 +2,7 @@ package com.beacmc.beacmcstaffwork.discord;
 
 import com.beacmc.beacmcstaffwork.discord.command.LinkCommand;
 import com.beacmc.beacmcstaffwork.discord.command.StatsCommand;
-import com.beacmc.beacmcstaffwork.manager.configuration.Config;
+import com.beacmc.beacmcstaffwork.config.Config;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;

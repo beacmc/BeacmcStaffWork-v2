@@ -1,4 +1,5 @@
 package com.beacmc.beacmcstaffwork.util;
+
 import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.lang.StringUtils;
 
@@ -20,8 +21,7 @@ public class Color {
         final Matcher matcher = PATTERN.matcher(text);
         while (matcher.find()) {
             try {
-                final ChatColor chatColor = net.md_5.bungee.api.ChatColor.of(matcher.group(1));
-
+                final ChatColor chatColor = ChatColor.of(matcher.group(1));
 
                 if (chatColor != null) {
                     text = StringUtils.replace(text, matcher.group(), chatColor.toString());
@@ -29,6 +29,7 @@ public class Color {
             } catch (IllegalArgumentException ignored) { }
         }
 
-        return ChatColor.translateAlternateColorCodes('&', text);
+        return ChatColor.translateAlternateColorCodes('&', text)
+                .replace("&", "");
     }
 }
