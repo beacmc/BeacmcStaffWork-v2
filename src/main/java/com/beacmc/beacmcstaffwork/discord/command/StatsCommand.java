@@ -19,7 +19,7 @@ public class StatsCommand extends ListenerAdapter {
     public void onMessageReceived(MessageReceivedEvent event) {
         String msg = event.getMessage().getContentRaw();
         String[] args = msg.split(" ");
-        Member member = event.getMember();
+        net.dv8tion.jda.api.entities.User member = event.getAuthor();
         if(msg.startsWith(Config.getString("settings.discord.commands.stats-command.command"))) {
             try {
                 TextChannel channel = event.getChannel().asTextChannel();

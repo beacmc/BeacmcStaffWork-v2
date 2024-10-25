@@ -4,6 +4,7 @@ import com.beacmc.beacmcstaffwork.BeacmcStaffWork;
 import com.beacmc.beacmcstaffwork.player.StaffPlayer;
 import org.bukkit.Bukkit;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
@@ -27,9 +28,7 @@ public class ActionManager {
     }
 
     public void registerActions(Action... actions) {
-        for(Action action : actions) {
-            registerAction(action);
-        }
+        Arrays.stream(actions).forEach(this::registerAction);
     }
 
     public void unregisterAction(Action action) {

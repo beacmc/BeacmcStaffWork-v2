@@ -1,5 +1,6 @@
 package com.beacmc.beacmcstaffwork;
 
+import com.beacmc.beacmcstaffwork.api.addon.AddonManager;
 import com.beacmc.beacmcstaffwork.util.action.*;
 import com.beacmc.beacmcstaffwork.api.action.ActionManager;
 import com.beacmc.beacmcstaffwork.command.admin.StaffAdminCommand;
@@ -37,6 +38,7 @@ public final class BeacmcStaffWork extends JavaPlugin {
     private static ActionManager actionManager;
     private static StaffWorkManager staffWorkManager;
     private static HashSet<StaffPlayer> users;
+    private static AddonManager addonManager;
 
 
     @Override
@@ -91,6 +93,9 @@ public final class BeacmcStaffWork extends JavaPlugin {
         if(isAdvancedBanEnabled() && !isLiteBansEnabled()) {
             this.getServer().getPluginManager().registerEvents(new BanListener(), this);
         }
+
+        addonManager = new AddonManager();
+        addonManager.loadAddons();
 
         this.getServer().getPluginManager().registerEvents(new MainListener(), this);
         this.getServer().getPluginManager().registerEvents(new PluginListener(), this);
@@ -148,6 +153,10 @@ public final class BeacmcStaffWork extends JavaPlugin {
     public void reloadConfig() {
         super.reloadConfig();
         Config.reload();
+    }
+
+    public static AddonManager getAddonManager() {
+        return addonManager;
     }
 
     public static StaffWorkManager getStaffWorkManager() {

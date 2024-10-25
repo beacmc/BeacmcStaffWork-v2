@@ -9,6 +9,7 @@ import me.clip.placeholderapi.PlaceholderAPI;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 public class WorkListener implements Listener {
@@ -21,16 +22,16 @@ public class WorkListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     public void onEnableWork(PlayerEnableWorkEvent event) {
         if(enableChannel == null) return;
-        sendMessage(event.getPlayer(), enableChannel, "on-enable-work");
+        sendMessage(event.getStaffPlayer().getPlayer(), enableChannel, "on-enable-work");
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     public void onDisableWork(PlayerDisableWorkEvent event) {
         if(disableChannel == null) return;
-        sendMessage(event.getPlayer(), disableChannel, "on-disable-work");
+        sendMessage(event.getStaffPlayer().getPlayer(), disableChannel, "on-disable-work");
     }
 
 

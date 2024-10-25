@@ -42,6 +42,10 @@ public class StaffPlayer {
         return user.isWork();
     }
 
+    public String getIPAddress() {
+        return player.getAddress().getHostName();
+    }
+
     public void stopWork() {
         if(!this.hasPermission("beacmcstaffwork.use") && !this.isWork())
             return;

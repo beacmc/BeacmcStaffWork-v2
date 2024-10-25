@@ -2,6 +2,7 @@ package com.beacmc.beacmcstaffwork.database.dao;
 
 import com.beacmc.beacmcstaffwork.database.model.User;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.table.TableInfo;
 
 import java.sql.SQLException;
@@ -24,4 +25,6 @@ public interface UserDao {
     TableInfo<User, String> getTableInfo();
 
     int delete(User user) throws SQLException;
+
+    QueryBuilder<User, String> queryBuilder();
 }

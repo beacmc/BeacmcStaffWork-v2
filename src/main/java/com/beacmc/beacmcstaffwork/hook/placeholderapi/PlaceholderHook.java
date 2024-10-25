@@ -6,6 +6,7 @@ import com.beacmc.beacmcstaffwork.database.model.User;
 import com.beacmc.beacmcstaffwork.util.Color;
 import com.beacmc.beacmcstaffwork.work.Work;
 import com.beacmc.beacmcstaffwork.config.Config;
+import com.j256.ormlite.stmt.QueryBuilder;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +17,12 @@ import java.util.List;
 public class PlaceholderHook extends PlaceholderExpansion {
 
     private static final BeacmcStaffWork plugin = BeacmcStaffWork.getInstance();
+    private final UserDao userDao;
 
+
+    public PlaceholderHook() {
+        userDao = BeacmcStaffWork.getDatabase().getUserDao();
+    }
 
     public void load() {
         register();
@@ -54,7 +60,6 @@ public class PlaceholderHook extends PlaceholderExpansion {
 
     public String onPlaceholderRequest(Player player, String params) {
         User user;
-        UserDao userDao = BeacmcStaffWork.getDatabase().getUserDao();
         try {
             user = userDao.queryForId(player.getName().toLowerCase());
         } catch (SQLException e) {
@@ -75,23 +80,56 @@ public class PlaceholderHook extends PlaceholderExpansion {
         else if (params.equals("time_in_work"))
             return Color.compile(Work.getTimeFormat(user));
 
-        else if(params.equals("bans"))
+        else if(params.startsWith("bans")) {
+            if (params.equals("bans_all")) {
+                return String.valueOf(getStatisticSum("bans"));
+            }
             return String.valueOf(user.getBans());
+        }
 
-        else if(params.equals("mutes"))
+        else if(params.startsWith("mutes")) {
+            if (params.equals("mutes_all")) {
+                return String.valueOf(getStatisticSum("mutes"));
+            }
             return String.valueOf(user.getMutes());
+        }
 
-        else if(params.equals("kicks"))
+        else if(params.startsWith("kicks")) {
+            if (params.equals("kicks_all")) {
+                return String.valueOf(getStatisticSum("kicks"));
+            }
             return String.valueOf(user.getKicks());
+        }
 
-        else if(params.equals("unbans"))
+        else if(params.startsWith("unbans")) {
+            if (params.equals("unbans_all")) {
+                return String.valueOf(getStatisticSum("unbans"));
+            }
             return String.valueOf(user.getUnbans());
+        }
 
-        else if(params.equals("unmutes"))
+        else if(params.startsWith("unmutes")) {
+            if (params.equals("unmutes_all")) {
+                return String.valueOf(getStatisticSum("unmutes"));
+            }
             return String.valueOf(user.getUnmutes());
+        }
 
         else
             return "";
 
+    }
+
+    private String getStatisticSum(String column) {
+        try {
+            QueryBuilder<User, String> queryBuilder = userDao.queryBuilder();
+            return queryBuilder.selectRaw("SUM(" + column + ") AS total")
+                    .queryRaw()
+                    .getResults()
+                    .get(0)[0];
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
