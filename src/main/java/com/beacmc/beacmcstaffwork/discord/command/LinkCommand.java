@@ -21,7 +21,7 @@ public class LinkCommand extends ListenerAdapter {
         Member member = event.getMember();
         long id;
 
-        if(!member.hasPermission(Permission.ADMINISTRATOR))
+        if(member != null && !member.hasPermission(Permission.ADMINISTRATOR))
             return;
 
         if(msg.startsWith(Config.getString("settings.discord.commands.link-command.command"))) {
