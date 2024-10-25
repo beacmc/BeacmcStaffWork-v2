@@ -141,10 +141,13 @@ public class MainListener implements Listener {
 
         if (manager.contains(player)) {
             StaffPlayer staffPlayer = manager.getStaffPlayerByPlayer(player);
-            action.execute(staffPlayer, Config.getStringList("settings.actions." + staffPlayer.getPrimaryGroup() + ".disable-work"));
-            staffPlayer.stopWork();
-            Bukkit.getPluginManager().callEvent(new PlayerDisableWorkEvent(staffPlayer.getPlayer()));
-            users.remove(staffPlayer);
+            PlayerDisableWorkEvent playerDisableWorkEvent = new PlayerDisableWorkEvent(staffPlayer);
+            Bukkit.getPluginManager().callEvent(playerDisableWorkEvent);
+            if (!playerDisableWorkEvent.isCancelled()) {
+                action.execute(staffPlayer, Config.getStringList("settings.actions." + staffPlayer.getPrimaryGroup() + ".disable-work"));
+                staffPlayer.stopWork();
+                users.remove(staffPlayer);
+            }
         }
     }
 
@@ -160,10 +163,13 @@ public class MainListener implements Listener {
 
         if (manager.contains(player)) {
             StaffPlayer staffPlayer = manager.getStaffPlayerByPlayer(player);
-            action.execute(staffPlayer, Config.getStringList("settings.actions." + staffPlayer.getPrimaryGroup() + ".disable-work"));
-            staffPlayer.stopWork();
-            Bukkit.getPluginManager().callEvent(new PlayerDisableWorkEvent(staffPlayer.getPlayer()));
-            users.remove(staffPlayer);
+            PlayerDisableWorkEvent playerDisableWorkEvent = new PlayerDisableWorkEvent(staffPlayer);
+            Bukkit.getPluginManager().callEvent(playerDisableWorkEvent);
+            if (!playerDisableWorkEvent.isCancelled()) {
+                action.execute(staffPlayer, Config.getStringList("settings.actions." + staffPlayer.getPrimaryGroup() + ".disable-work"));
+                staffPlayer.stopWork();
+                users.remove(staffPlayer);
+            }
         }
     }
 
@@ -177,7 +183,8 @@ public class MainListener implements Listener {
     @EventHandler
     public void onEnableWork(PlayerEnableWorkEvent event) {
         if (Config.getBoolean("settings.discord.enable")) {
-            Player player = event.getPlayer();
+            StaffPlayer staffPlayer = event.getStaffPlayer();
+            Player player = staffPlayer.getPlayer();
             TextChannel channel = BeacmcStaffWork.getDiscordBot().getJDA().getGuildById(Long.valueOf(Config.getString("settings.discord.guild-id"))).getTextChannelById(Long.valueOf(Config.getString("settings.discord.on-enable-work.channel-id")));
             if (channel == null) {
                 Bukkit.getLogger().info("Channel is null");
@@ -215,7 +222,8 @@ public class MainListener implements Listener {
     @EventHandler
     public void onDisableWork(PlayerDisableWorkEvent event) {
         if(Config.getBoolean("settings.discord.enable")) {
-            Player player = event.getPlayer();
+            StaffPlayer staffPlayer = event.getStaffPlayer();
+            Player player = staffPlayer.getPlayer();
             TextChannel channel = BeacmcStaffWork.getDiscordBot().getJDA().getGuildById(Long.valueOf(Config.getString("settings.discord.guild-id"))).getTextChannelById(Long.valueOf(Config.getString("settings.discord.on-disable-work.channel-id")));
             if(channel == null)
                 return;

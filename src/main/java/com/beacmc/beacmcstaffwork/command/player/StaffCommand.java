@@ -43,19 +43,25 @@ public class StaffCommand extends CommandManager {
                 return;
             }
             if(moderator.isWork()) {
-                moderator.sendTitle("settings.titles.on-disable-work.title", "settings.titles.on-disable-work.subtitle");
-                moderator.stopWork();
-                moderator.sendMessage("settings.messages.on-disable-work");
-                Bukkit.getPluginManager().callEvent(new PlayerDisableWorkEvent(moderator.getPlayer()));
-                action.execute(moderator, Config.getStringList("settings.actions." + moderator.getPrimaryGroup() + ".disable-work"));
+                PlayerDisableWorkEvent event = new PlayerDisableWorkEvent(moderator);
+                Bukkit.getPluginManager().callEvent(event);
+                if (!event.isCancelled()) {
+                    moderator.sendTitle("settings.titles.on-disable-work.title", "settings.titles.on-disable-work.subtitle");
+                    moderator.stopWork();
+                    moderator.sendMessage("settings.messages.on-disable-work");
+                    action.execute(moderator, Config.getStringList("settings.actions." + moderator.getPrimaryGroup() + ".disable-work"));
+                }
                 return;
             }
-            moderator.sendTitle("settings.titles.on-enable-work.title", "settings.titles.on-enable-work.subtitle");
-            moderator.startWork();
-            moderator.sendMessage("settings.messages.on-enable-work");
 
-            Bukkit.getPluginManager().callEvent(new PlayerEnableWorkEvent(moderator.getPlayer()));
-            action.execute(moderator, Config.getStringList("settings.actions." + moderator.getPrimaryGroup() + ".enable-work"));
+            PlayerEnableWorkEvent event = new PlayerEnableWorkEvent(moderator);
+            Bukkit.getPluginManager().callEvent(event);
+            if (!event.isCancelled()) {
+                moderator.sendTitle("settings.titles.on-enable-work.title", "settings.titles.on-enable-work.subtitle");
+                moderator.startWork();
+                moderator.sendMessage("settings.messages.on-enable-work");
+                action.execute(moderator, Config.getStringList("settings.actions." + moderator.getPrimaryGroup() + ".enable-work"));
+            }
             return;
         }
         if(args.length == 1 && args[0].equalsIgnoreCase("stats")) {

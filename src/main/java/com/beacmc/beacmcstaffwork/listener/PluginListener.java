@@ -36,9 +36,12 @@ public class PluginListener implements Listener {
             if (!player.isOnline())
                 return;
 
-            action.execute(player, Config.getStringList("settings.actions." + player.getPrimaryGroup() + ".disable-work"));
-            player.stopWork();
-            Bukkit.getPluginManager().callEvent(new PlayerDisableWorkEvent(player.getPlayer()));
+            PlayerDisableWorkEvent playerDisableWorkEvent = new PlayerDisableWorkEvent(player);
+            Bukkit.getPluginManager().callEvent(playerDisableWorkEvent);
+            if (!playerDisableWorkEvent.isCancelled()) {
+                action.execute(player, Config.getStringList("settings.actions." + player.getPrimaryGroup() + ".disable-work"));
+                player.stopWork();
+            }
         }
     }
 }
