@@ -9,6 +9,7 @@ import me.clip.placeholderapi.PlaceholderAPI;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -22,14 +23,12 @@ public class StaffPlayer {
     private static User user;
     private final Database database;
 
-
-
     public StaffPlayer(Player player) {
         this.player = player;
         database = BeacmcStaffWork.getDatabase();
         try {
             user = database.getUserDao().queryForId(player.getName().toLowerCase());
-        } catch (SQLException e) { }
+        } catch (SQLException ignored) { }
     }
 
     public String getName() {
@@ -37,7 +36,7 @@ public class StaffPlayer {
     }
 
     public boolean isWork() {
-        if(!isModerator())
+        if(isModerator())
             return false;
         return user.isWork();
     }
@@ -64,7 +63,7 @@ public class StaffPlayer {
             return;
 
         try {
-            if(!isModerator()) {
+            if(isModerator()) {
                 user = new User(player.getName().toLowerCase(), null, true, 0, 0, 0, 0, 0, 0, 0, 0);
                 database.getUserDao().createOrUpdate(user);
             }
@@ -76,14 +75,12 @@ public class StaffPlayer {
     }
 
     public boolean isModerator() {
-        return user != null;
+        return user == null;
     }
-
 
     public UUID getID() {
         return player.getUniqueId();
     }
-
 
     public Player getPlayer() {
         return player;
@@ -111,13 +108,10 @@ public class StaffPlayer {
         ));
     }
 
-
-
     public void sendTitle(String title, String subtitle) {
         player.sendTitle(Color.compile(Config.getString(title)), Color.compile(Config.getString(subtitle)),
         10, 10, 10);
     }
-
 
     public void sendMessageList(String path) {
         List<String> lines = Config.getStringList(path).stream()
@@ -129,11 +123,22 @@ public class StaffPlayer {
         }
     }
 
+    @Nullable
     public static StaffPlayer getStaffPlayerByName(String name) {
-        return new StaffPlayer(Bukkit.getPlayer(name));
+        Player execute = Bukkit.getPlayer(name);
+        return execute != null ? new StaffPlayer(execute) : null;
     }
 
+    @Nullable
     public User getUser() {
         return user;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof String) {
+            return getName().equals(obj);
+        }
+        return super.equals(obj);
     }
 }

@@ -67,7 +67,7 @@ public final class BeacmcStaffWork extends JavaPlugin {
 
         actionManager.registerActions(new ConsoleAction(), new PlayerAction(), new SoundAction(), new MessageToModeratosAction(), new MessageAction(), new BroadcastAction(), new ActionbarAction());
         staffWorkManager = new StaffWorkManager();
-        update();
+        UpdateChecker.startCheck();
 
         new PlaceholderHook().load();
         luckPerms = this.getServer().getServicesManager().load(LuckPerms.class);
@@ -128,19 +128,6 @@ public final class BeacmcStaffWork extends JavaPlugin {
         if(messenger.isIncomingChannelRegistered(this, "BungeeCord")) {
             this.getServer().getMessenger().unregisterOutgoingPluginChannel(this);
             this.getServer().getMessenger().unregisterIncomingPluginChannel(this);
-        }
-    }
-
-
-    private void update() {
-        if (!this.getConfig().getBoolean("settings.update-check"))
-            return;
-
-        String latest = UpdateChecker.start();
-        if (!latest.equals(this.getDescription().getVersion())) {
-            ArrayList<String> list = new ArrayList<>(Config.getStringList("settings.messages.update-check-console"));
-            list.forEach(execute ->
-                System.out.println(Color.compile(execute).replace("{current_version}", this.getDescription().getVersion()).replace("{latest_version}", latest)));
         }
     }
 

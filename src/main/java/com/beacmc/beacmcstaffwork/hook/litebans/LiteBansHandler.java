@@ -31,7 +31,7 @@ public class LiteBansHandler {
                     StaffPlayer staffPlayer = new StaffPlayer(player);
                     User user = staffPlayer.getUser();
 
-                    if (!staffPlayer.isOnline() || !staffPlayer.isWork())
+                    if (staffPlayer.isOnline() || !staffPlayer.isWork())
                         return;
 
                     switch (entry.getType()) {
@@ -64,7 +64,7 @@ public class LiteBansHandler {
                     StaffPlayer staffPlayer = new StaffPlayer(player);
                     User user = staffPlayer.getUser();
 
-                    if (!staffPlayer.isOnline() || (!staffPlayer.isWork() && Config.getBoolean("settings.required-work-on-add-statistic")))
+                    if (staffPlayer.isOnline() || (!staffPlayer.isWork() && Config.getBoolean("settings.required-work-on-add-statistic")))
                         return;
 
                     switch (entry.getType()) {

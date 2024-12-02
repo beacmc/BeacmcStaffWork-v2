@@ -33,7 +33,7 @@ public class PluginListener implements Listener {
             return;
 
         for (StaffPlayer player : staffPlayers) {
-            if (!player.isOnline())
+            if (player.isOnline())
                 return;
 
             PlayerDisableWorkEvent playerDisableWorkEvent = new PlayerDisableWorkEvent(player);
