@@ -6,9 +6,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class CommandManager implements CommandExecutor {
+public abstract class Command implements CommandExecutor {
 
-    public CommandManager(String command) {
+    public Command(String command) {
         PluginCommand cmd = BeacmcStaffWork.getInstance().getCommand(command);
         if (cmd != null) cmd.setExecutor(this);
     }
