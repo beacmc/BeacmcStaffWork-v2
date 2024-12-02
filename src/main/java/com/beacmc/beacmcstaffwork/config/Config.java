@@ -30,6 +30,10 @@ public class Config {
         return config.getInt(path);
     }
 
+    public static List<Integer> getIntegerList(String path) {
+        return config.getIntegerList(path);
+    }
+
     public static int getInt(String path) {
         assert config.getString(path) != null;
         return config.getInt(path);

@@ -9,6 +9,11 @@ softdepend:
   - PlaceholderAPI
 author: beacmc
 commands:
+  staffplayers:
+    aliases:
+      - admins
+      - adminsonline
+      - staff
   staffchat:
     aliases:
       - sc
