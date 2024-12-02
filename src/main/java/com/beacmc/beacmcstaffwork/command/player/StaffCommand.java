@@ -5,7 +5,7 @@ import com.beacmc.beacmcstaffwork.api.action.ActionManager;
 import com.beacmc.beacmcstaffwork.api.event.PlayerDisableWorkEvent;
 import com.beacmc.beacmcstaffwork.api.event.PlayerEnableWorkEvent;
 import com.beacmc.beacmcstaffwork.work.StaffWorkManager;
-import com.beacmc.beacmcstaffwork.api.command.CommandManager;
+import com.beacmc.beacmcstaffwork.api.command.Command;
 import com.beacmc.beacmcstaffwork.player.StaffPlayer;
 import com.beacmc.beacmcstaffwork.config.Config;
 import net.luckperms.api.LuckPerms;
@@ -14,7 +14,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 
-public class StaffCommand extends CommandManager {
+public class StaffCommand extends Command {
 
     private final LuckPerms luckPerms;
     private final StaffWorkManager manager;
@@ -30,7 +30,7 @@ public class StaffCommand extends CommandManager {
     public void execute(CommandSender sender, org.bukkit.command.Command command, String label, String[] args) {
         if (!(sender instanceof Player)) return;
 
-        StaffPlayer moderator = manager.getStaffPlayerByPlayer((Player) sender);
+        StaffPlayer moderator = manager.getStaffPlayerByPlayer((Player) sender, true);
         if (!moderator.hasPermission("beacmcstaffwork.use")) {
             moderator.sendMessage("settings.messages.no-permission");
             return;

@@ -2,53 +2,58 @@ package com.beacmc.beacmcstaffwork.command.staffchat;
 
 import com.beacmc.beacmcstaffwork.BeacmcStaffWork;
 import com.beacmc.beacmcstaffwork.util.Color;
-import com.beacmc.beacmcstaffwork.api.command.CommandManager;
+import com.beacmc.beacmcstaffwork.api.command.Command;
 import com.beacmc.beacmcstaffwork.player.StaffPlayer;
 import com.beacmc.beacmcstaffwork.config.Config;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.Arrays;
 
-public class StaffChatCommand extends CommandManager {
+public class StaffChatCommand extends Command {
 
     public StaffChatCommand() {
         super("staffchat");
     }
 
     @Override
-    public void execute(CommandSender sender, Command command, String label, String[] args) {
+    public void execute(CommandSender sender, org.bukkit.command.Command command, String label, String[] args) {
         if(!(sender instanceof Player)) {
             sender.sendMessage("only player");
             return;
         }
 
         StaffPlayer user = new StaffPlayer((Player) sender);
-        if(!user.hasPermission("beacmcstaffwork.chat")) {
+        if (!user.hasPermission("beacmcstaffwork.chat")) {
             user.sendMessage("settings.messages.no-permission");
             return;
         }
 
-        if(args.length == 0) {
+        if (args.length == 0) {
             user.sendMessage("settings.messages.error-use");
             return;
         }
 
-        String format = PlaceholderAPI.setPlaceholders(user.getPlayer(), Config.getString("settings.chat-format"));
-        format = Color.compile(format).replace("{MESSAGE}", String.join(" ", Arrays.asList(args)));
-        String finalFormat = format;
+        final boolean isBroadcast = Arrays.asList(args).contains("-bc");
 
-        sendPluginMessage(user.getPlayer(), finalFormat);
-        Bukkit.getOnlinePlayers().forEach(player -> {
-            if (player.hasPermission("beacmcstaffwork.chat")) {
-                player.sendMessage(finalFormat);
-            }
-        });
+        final String messageKey = isBroadcast && user.hasPermission("beacmcstaffwork.chat.broadcast") ? "settings.chat-broadcast-format" : "settings.chat-format";
+        final String messageTemplate = Config.getString(messageKey);
+
+        args = Arrays.stream(args)
+                .filter(arg -> !"-bc".equals(arg))
+                .toArray(String[]::new);
+
+        final String format = Color.compile(PlaceholderAPI.setPlaceholders(user.getPlayer(), messageTemplate))
+                .replace("{MESSAGE}", String.join(" ", args));
+
+        sendPluginMessage(user.getPlayer(), format);
+        Bukkit.getOnlinePlayers().stream()
+                .filter(player -> player.hasPermission("beacmcstaffwork.chat"))
+                .forEach(player -> player.sendMessage(format));
     }
 
     private void sendPluginMessage(Player player, String message) {

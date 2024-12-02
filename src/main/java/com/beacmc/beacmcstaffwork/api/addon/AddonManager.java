@@ -12,13 +12,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.logging.Logger;
 
 public class AddonManager {
 
     private final Map<String, StaffWorkAddon> addons;
+    private final Logger logger;
 
     public AddonManager() {
         addons = new HashMap<>();
+        logger = BeacmcStaffWork.getInstance().getLogger();
     }
 
     public void loadAddons() {
@@ -52,16 +55,17 @@ public class AddonManager {
                 return;
 
             AddonClassLoader loader = new AddonClassLoader(file, BeacmcStaffWork.getInstance().getClass().getClassLoader());
+
             try {
                 Class<?> clazz = Class.forName(main, true, loader);
                 StaffWorkAddon addon = (StaffWorkAddon) clazz.getDeclaredConstructor().newInstance();
                 addon.initialize(name, version, file, loader);
                 addons.put(name, addon);
                 enableAddon(addon);
-            } catch (Throwable e) {
-                e.printStackTrace();
-                closeURLClassLoader(loader);
-                addons.remove(name);
+            } catch (ClassNotFoundException e) {
+                logger.severe("Main class not found!");
+            } catch (ClassCastException e) {
+                logger.severe("Inheritance of the StaffWorkAddon class is required for the addon to work");
             }
         } catch (Exception e) {
             e.printStackTrace();

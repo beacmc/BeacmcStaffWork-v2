@@ -1,7 +1,6 @@
 package com.beacmc.beacmcstaffwork.lib;
 
 import com.alessiodp.libby.BukkitLibraryManager;
-import com.alessiodp.libby.Library;
 import org.bukkit.plugin.Plugin;
 
 

@@ -140,7 +140,7 @@ public class MainListener implements Listener {
             return;
 
         if (manager.contains(player)) {
-            StaffPlayer staffPlayer = manager.getStaffPlayerByPlayer(player);
+            StaffPlayer staffPlayer = manager.getStaffPlayerByPlayer(player, true);
             PlayerDisableWorkEvent playerDisableWorkEvent = new PlayerDisableWorkEvent(staffPlayer);
             Bukkit.getPluginManager().callEvent(playerDisableWorkEvent);
             if (!playerDisableWorkEvent.isCancelled()) {
@@ -162,7 +162,7 @@ public class MainListener implements Listener {
             return;
 
         if (manager.contains(player)) {
-            StaffPlayer staffPlayer = manager.getStaffPlayerByPlayer(player);
+            StaffPlayer staffPlayer = manager.getStaffPlayerByPlayer(player, true);
             PlayerDisableWorkEvent playerDisableWorkEvent = new PlayerDisableWorkEvent(staffPlayer);
             Bukkit.getPluginManager().callEvent(playerDisableWorkEvent);
             if (!playerDisableWorkEvent.isCancelled()) {

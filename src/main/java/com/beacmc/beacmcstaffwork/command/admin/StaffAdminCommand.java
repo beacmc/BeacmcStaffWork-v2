@@ -6,12 +6,11 @@ import com.beacmc.beacmcstaffwork.command.admin.subcommand.ReloadSubcommand;
 import com.beacmc.beacmcstaffwork.command.admin.subcommand.ResetSubcommand;
 import com.beacmc.beacmcstaffwork.command.admin.subcommand.StatsSubcommand;
 import com.beacmc.beacmcstaffwork.util.Color;
-import com.beacmc.beacmcstaffwork.api.command.CommandManager;
+import com.beacmc.beacmcstaffwork.api.command.Command;
 import com.beacmc.beacmcstaffwork.config.Config;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-public class StaffAdminCommand extends CommandManager {
+public class StaffAdminCommand extends Command {
 
     private final SubcommandManager subcommandManager;
 
@@ -22,7 +21,7 @@ public class StaffAdminCommand extends CommandManager {
     }
 
     @Override
-    public void execute(CommandSender sender, Command command, String label, String[] args) {
+    public void execute(CommandSender sender, org.bukkit.command.Command command, String label, String[] args) {
         if (!sender.hasPermission("beacmcstaffwork.admin")){
             sender.sendMessage(Color.compile(Config.getString("settings.messages.no-permission")
                     .replace("{PREFIX}", Config.getString("settings.prefix"))));

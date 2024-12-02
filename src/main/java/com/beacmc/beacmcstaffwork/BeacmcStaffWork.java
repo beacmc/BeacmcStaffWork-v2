@@ -1,6 +1,7 @@
 package com.beacmc.beacmcstaffwork;
 
 import com.beacmc.beacmcstaffwork.api.addon.AddonManager;
+import com.beacmc.beacmcstaffwork.command.staffmenu.StaffMenuCommand;
 import com.beacmc.beacmcstaffwork.util.action.*;
 import com.beacmc.beacmcstaffwork.api.action.ActionManager;
 import com.beacmc.beacmcstaffwork.command.admin.StaffAdminCommand;
@@ -25,6 +26,7 @@ import com.beacmc.beacmcstaffwork.config.Config;
 import com.beacmc.beacmcstaffwork.util.messaging.MessagingListener;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.java.PluginClassLoader;
 import org.bukkit.plugin.messaging.Messenger;
 
 import java.util.*;
@@ -44,12 +46,12 @@ public final class BeacmcStaffWork extends JavaPlugin {
     @Override
     public void onEnable() {
         if(!this.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-            this.getLogger().severe("Установите плагин PlaceholderAPI для работы плагина");
+            this.getLogger().severe("Установите PlaceholderAPI для работы плагина");
             this.getServer().getPluginManager().disablePlugin(this);
         }
 
         if(!this.getServer().getPluginManager().isPluginEnabled("LuckPerms")) {
-            this.getLogger().severe("Установите плагин LuckPerms для работы плагина");
+            this.getLogger().severe("Установите LuckPerms для работы плагина");
             this.getServer().getPluginManager().disablePlugin(this);
         }
 
@@ -73,6 +75,7 @@ public final class BeacmcStaffWork extends JavaPlugin {
         new StaffCommand();
         new StaffAdminCommand();
         new StaffChatCommand();
+        new StaffMenuCommand();
         if (Config.getBoolean("settings.discord.enable")) {
             discordBot = new DiscordBot();
             discordBot.connect();

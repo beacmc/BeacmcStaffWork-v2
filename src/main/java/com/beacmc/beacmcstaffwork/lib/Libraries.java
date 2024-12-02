@@ -1,8 +1,6 @@
 package com.beacmc.beacmcstaffwork.lib;
 
 import com.alessiodp.libby.Library;
-import org.bukkit.entity.LightningStrike;
-
 import java.util.List;
 
 public class Libraries {

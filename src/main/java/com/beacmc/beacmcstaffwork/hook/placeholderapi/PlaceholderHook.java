@@ -4,7 +4,7 @@ import com.beacmc.beacmcstaffwork.BeacmcStaffWork;
 import com.beacmc.beacmcstaffwork.database.dao.UserDao;
 import com.beacmc.beacmcstaffwork.database.model.User;
 import com.beacmc.beacmcstaffwork.util.Color;
-import com.beacmc.beacmcstaffwork.work.Work;
+import com.beacmc.beacmcstaffwork.work.TimeUtil;
 import com.beacmc.beacmcstaffwork.config.Config;
 import com.j256.ormlite.stmt.QueryBuilder;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
@@ -78,7 +78,7 @@ public class PlaceholderHook extends PlaceholderExpansion {
             return user.isWork() ? Color.compile(Config.getString("settings.placeholderapi.placeholders.on-work")) : Color.compile(Config.getString("settings.placeholderapi.placeholders.not-work"));
 
         else if (params.equals("time_in_work"))
-            return Color.compile(Work.getTimeFormat(user));
+            return Color.compile(TimeUtil.getFormattedTime(user.getTime()));
 
         else if(params.startsWith("bans")) {
             if (params.equals("bans_all")) {

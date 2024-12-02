@@ -15,15 +15,15 @@ public class StaffWorkManager {
         staffPlayers = BeacmcStaffWork.getUsers();
     }
 
-    public @NotNull StaffPlayer getStaffPlayerByPlayer(Player player) {
+    public StaffPlayer getStaffPlayerByPlayer(Player player, boolean createNewOnNull) {
         if(player == null)
             return null;
 
         for (StaffPlayer staffPlayer : BeacmcStaffWork.getUsers()) {
-            if(staffPlayer.getName() == player.getName())
+            if(staffPlayer.getName().equals(player.getName()))
                 return staffPlayer;
         }
-        return new StaffPlayer(player);
+        return createNewOnNull ? new StaffPlayer(player) : null;
     }
 
     public boolean contains(Player player) {

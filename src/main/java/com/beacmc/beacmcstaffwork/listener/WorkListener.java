@@ -22,13 +22,13 @@ public class WorkListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOW)
+    @EventHandler
     public void onEnableWork(PlayerEnableWorkEvent event) {
         if(enableChannel == null) return;
         sendMessage(event.getStaffPlayer().getPlayer(), enableChannel, "on-enable-work");
     }
 
-    @EventHandler(priority = EventPriority.LOW)
+    @EventHandler
     public void onDisableWork(PlayerDisableWorkEvent event) {
         if(disableChannel == null) return;
         sendMessage(event.getStaffPlayer().getPlayer(), disableChannel, "on-disable-work");
