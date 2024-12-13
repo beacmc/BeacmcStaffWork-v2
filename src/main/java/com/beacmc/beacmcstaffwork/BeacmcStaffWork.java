@@ -17,16 +17,15 @@ import com.beacmc.beacmcstaffwork.hook.advancedban.BanListener;
 import com.beacmc.beacmcstaffwork.listener.CommandListener;
 import com.beacmc.beacmcstaffwork.listener.MainListener;
 import com.beacmc.beacmcstaffwork.listener.PluginListener;
+import com.beacmc.beacmcstaffwork.util.metrics.MetricBuilder;
 import com.beacmc.beacmcstaffwork.work.StaffWorkManager;
 import com.beacmc.beacmcstaffwork.player.StaffPlayer;
-import com.beacmc.beacmcstaffwork.util.Color;
 import com.beacmc.beacmcstaffwork.hook.litebans.LiteBansHandler;
 import com.beacmc.beacmcstaffwork.util.UpdateChecker;
 import com.beacmc.beacmcstaffwork.config.Config;
 import com.beacmc.beacmcstaffwork.util.messaging.MessagingListener;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.plugin.java.PluginClassLoader;
 import org.bukkit.plugin.messaging.Messenger;
 
 import java.util.*;
@@ -103,6 +102,8 @@ public final class BeacmcStaffWork extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new MainListener(), this);
         this.getServer().getPluginManager().registerEvents(new PluginListener(), this);
         this.getServer().getPluginManager().registerEvents(new CommandListener(), this);
+
+        new MetricBuilder().build(24125);
     }
 
     private boolean isLiteBansEnabled() {
