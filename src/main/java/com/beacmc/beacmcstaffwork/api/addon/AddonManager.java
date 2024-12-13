@@ -81,7 +81,7 @@ public class AddonManager {
     }
 
     public void unloadAddons() {
-        this.getAddons().forEach(this::unloadAddon);
+        for (StaffWorkAddon addon : getAddons()) unloadAddon(addon);
     }
 
     public void unloadAddon(StaffWorkAddon addon) {

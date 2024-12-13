@@ -16,10 +16,15 @@ import java.sql.SQLException;
 
 public class LiteBansHandler {
 
+    private final UserDao userDao;
+
+    public LiteBansHandler() {
+        userDao = BeacmcStaffWork.getDatabase().getUserDao();
+    }
+
     public void register() {
         Events.get().register(new Events.Listener() {
-            Database database = BeacmcStaffWork.getDatabase();
-            UserDao userDao = database.getUserDao();
+
             @Override
             public void entryAdded(Entry entry) {
                 try {
@@ -31,7 +36,10 @@ public class LiteBansHandler {
                     StaffPlayer staffPlayer = new StaffPlayer(player);
                     User user = staffPlayer.getUser();
 
-                    if (staffPlayer.isOnline() || !staffPlayer.isWork())
+                    if (user == null)
+                        return;
+
+                    if (staffPlayer.isOnline() || (!staffPlayer.isWork() && Config.getBoolean("settings.required-work-on-add-statistic")))
                         return;
 
                     switch (entry.getType()) {
@@ -64,16 +72,19 @@ public class LiteBansHandler {
                     StaffPlayer staffPlayer = new StaffPlayer(player);
                     User user = staffPlayer.getUser();
 
+                    if (user == null)
+                        return;
+
                     if (staffPlayer.isOnline() || (!staffPlayer.isWork() && Config.getBoolean("settings.required-work-on-add-statistic")))
                         return;
 
                     switch (entry.getType()) {
                         case "mute": {
-                            userDao.update(user.setMutes(user.getMutes() - 1).setUnmutes(user.getUnmutes() + 1));
+                            userDao.update(user.setUnmutes(user.getUnmutes() + 1));
                             break;
                         }
                         case "ban": {
-                            userDao.update(user.setBans(user.getBans() - 1).setUnbans(user.getUnbans() + 1));
+                            userDao.update(user.setUnbans(user.getUnbans() + 1));
                             break;
                         }
                     }

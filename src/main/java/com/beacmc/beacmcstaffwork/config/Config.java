@@ -2,6 +2,7 @@ package com.beacmc.beacmcstaffwork.config;
 
 
 import com.beacmc.beacmcstaffwork.BeacmcStaffWork;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.List;
@@ -30,6 +31,10 @@ public class Config {
         return config.getInt(path);
     }
 
+    public static long getLong(String path) {
+        return config.getLong(path);
+    }
+
     public static List<Integer> getIntegerList(String path) {
         return config.getIntegerList(path);
     }
@@ -37,6 +42,10 @@ public class Config {
     public static int getInt(String path) {
         assert config.getString(path) != null;
         return config.getInt(path);
+    }
+
+    public static ConfigurationSection getSection(String path) {
+        return config.getConfigurationSection(path);
     }
 
     static {

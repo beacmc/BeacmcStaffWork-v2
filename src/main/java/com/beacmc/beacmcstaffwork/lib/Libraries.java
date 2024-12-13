@@ -8,7 +8,7 @@ public class Libraries {
     public static final Library JDA = Library.builder()
             .groupId("net{}dv8tion")
             .artifactId("JDA")
-            .version("5.0.0-beta.20")
+            .version("5.2.1")
             .resolveTransitiveDependencies(true)
             .excludeTransitiveDependency("club{}minnced", "opus-java")
             .build();

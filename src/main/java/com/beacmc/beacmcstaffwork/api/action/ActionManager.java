@@ -40,7 +40,7 @@ public class ActionManager {
     }
 
     public void unregisterAllActions() {
-        registerActions.forEach(this::unregisterAction);
+        for (Action action : registerActions) unregisterAction(action);
     }
 
     public boolean isRegisterAction(Action action) {

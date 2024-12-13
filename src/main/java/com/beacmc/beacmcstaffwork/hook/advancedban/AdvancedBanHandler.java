@@ -5,7 +5,7 @@ import me.leoko.advancedban.utils.PunishmentType;
 
 public class AdvancedBanHandler {
 
-    private Punishment punishment;
+    private final Punishment punishment;
 
     public AdvancedBanHandler(Punishment punishment) {
         this.punishment = punishment;
@@ -20,27 +20,16 @@ public class AdvancedBanHandler {
         PunishmentType punishmentType = punishment.getType();
 
         switch (punishmentType) {
-            case BAN: {
-                type = "ban";
-                break;
-            }
-            case TEMP_BAN: {
-                type = "ban";
-                break;
-            }
+            case BAN:
+            case TEMP_IP_BAN:
+            case TEMP_BAN:
             case IP_BAN: {
                 type = "ban";
                 break;
             }
-            case TEMP_IP_BAN: {
-                type = "ban";
-                break;
-            }
+
+            case MUTE:
             case TEMP_MUTE: {
-                type = "mute";
-                break;
-            }
-            case MUTE: {
                 type = "mute";
                 break;
             }

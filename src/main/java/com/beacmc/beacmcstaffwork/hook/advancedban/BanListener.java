@@ -17,14 +17,21 @@ import java.sql.SQLException;
 
 public class BanListener implements Listener {
 
+    private final UserDao userDao;
+
+    public BanListener() {
+        this.userDao = BeacmcStaffWork.getDatabase().getUserDao();
+    }
+
     @EventHandler
     public void onPunish(PunishmentEvent event) {
         final AdvancedBanHandler handler = new AdvancedBanHandler(event.getPunishment());
         final Punishment punish = event.getPunishment();
         final StaffPlayer staffPlayer = new StaffPlayer(Bukkit.getPlayer(punish.getOperator()));
         final User user = staffPlayer.getUser();
-        final Database database = BeacmcStaffWork.getDatabase();
-        final UserDao userDao = database.getUserDao();
+
+        if (user == null)
+            return;
 
         if(!staffPlayer.isWork() && Config.getBoolean("settings.required-work-on-add-statistic"))
             return;
@@ -66,11 +73,11 @@ public class BanListener implements Listener {
 
             switch (handler.getType()) {
                 case "mute": {
-                    userDao.update(user.setMutes(user.getMutes() - 1).setUnmutes(user.getUnmutes() + 1));
+                    userDao.update(user.setUnmutes(user.getUnmutes() + 1));
                     break;
                 }
                 case "ban": {
-                    userDao.update(user.setBans(user.getBans() - 1).setUnbans(user.getUnbans() + 1));
+                    userDao.update(user.setUnbans(user.getUnbans() + 1));
                     break;
                 }
             }

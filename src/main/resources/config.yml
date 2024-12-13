@@ -4,6 +4,8 @@ settings:
 
   prefix: "#FF8600&lʙ#FF8A00&lᴇ#FF8E00&lᴀ#FF9200&lᴄ#FF9500&lᴍ#FF9900&lᴄ#FF9D00&ls#FFA100&lᴛ#FFA500&lᴀ#FFA900&lғ#FFAD00&lғ#FFB100&lᴡ#FFB400&lᴏ#FFB800&lʀ#FFBC00&lᴋ #FFC000&l▸&7"
 
+
+  # дефолтные
   chat-format: "&7[#FF8600&lSTAFFCHAT&7] &8&l| %luckperms_prefix%&7%player_name% &8&l> &f{MESSAGE}"
 
   # для отправки в чат персонала общее сообщение нужно поставить
@@ -12,7 +14,38 @@ settings:
   chat-broadcast-format: |
     &7
     &7   #f70505&lВНИМАНИЕ ⚠
-    &7   &8| &7%player_name% &8&l> &f{MESSAGE}
+    &7   &8| &f%player_name% &8&l> &f{MESSAGE}
+
+  discord-chat-broadcast-format: |
+    ## Внимание!
+    > {DISCORD_USERNAME} отправил важное сообщение
+    ```
+    {MESSAGE}
+    ```
+    @everyone
+
+  discord-chat-format: |
+    {DISCORD_USERNAME} | (Discord) отправил сообщение в майнкрафт стафф чат
+    > {MESSAGE}
+  # для синхронизации
+
+  chat-discord-to-game: "&7[#0d00ff&lSTAFFCHAT-DISCORD&7] {DISCORD_USERNAME} &8&l> &f{MESSAGE}"
+
+  chat-game-to-discord: |
+    `%player_name% | (Minecraft) отправил сообщение в админ-чат.`
+    > {MESSAGE}
+
+  chat-broadcast-discord-to-game: |
+    &7
+    &7   #f70505&lВНИМАНИЕ ⚠
+    &7   &8| &f{DISCORD_USERNAME} &7(Discord) &8&l> &f{MESSAGE}
+
+  # для того чтоб упомянуть какую-то роль сделайте это в формате:
+  # <@&айди_роли>
+  chat-broadcast-game-to-discord: |
+    `%player_name% отправил СРОЧНОЕ сообщение в админ-чат.`
+    > {MESSAGE}
+    @everyone
 
   # межсерверный стафф-чат. Будет работать на тех серверах
   # где включён данный модуль
@@ -55,19 +88,72 @@ settings:
       # только для типа активности: STREAMING
       url: ""
 
-    commands:
 
-      # команда только участников с правами администратора
+    commands:
+      staff-chat-command:
+        command: "!чат"
+
+        # если будет выключено, то соответственно команда в дискорде
+        # работать не будет
+        staff-chat-sync: true
+
+        chat-channel-id: 1180971768077369345
+        broadcast-channel-id: 1180971768077369345
+
+        # ПРИМЕЧАНИЕ. Команда будет работать если у участника будут
+        # ВСЕ роли из этого списка!!!
+        required-roles:
+          - 1295035056498413660 # айди роли
+
+        # ПРИМЕЧАНИЕ. Команда будет работать если у участника будут
+        # ВСЕ права из этого списка!!!
+        # все права можно найти тут:
+        # https://ci.dv8tion.net/job/JDA5/javadoc/net/dv8tion/jda/api/Permission.html
+        required-permissions: []
+
+        messages:
+          no-permission: "Недостаточно прав для использования этой команды"
+          no-roles: "Недостаточно ролей для использования этой команды"
+
       link-command:
         command: "!привязать"
+
+        # ПРИМЕЧАНИЕ. Команда будет работать если у участника будут
+        # ВСЕ роли из этого списка!!!
+        required-roles: []
+
+        # ПРИМЕЧАНИЕ. Команда будет работать если у участника будут
+        # ВСЕ права из этого списка!!!
+        # все права можно найти тут:
+        # https://ci.dv8tion.net/job/JDA5/javadoc/net/dv8tion/jda/api/Permission.html
+        required-permissions:
+          - ADMINISTRATOR
+
         messages:
+          no-permission: "Недостаточно прав для использования этой команды"
+          no-roles: "Недостаточно ролей для использования этой команды"
           link-success: "Аккаунт успешно привязан"
           no-args: "Недостаточно аргументов. Введите: `!привязать <игровой ник> <Discord ID>`"
           no-player: "Игрок не найден в базе. Возможно он никогда не входил в режим работы."
           number-format-exception: "Ожидалось число во втором аргументе."
+
       stats-command:
         command: "!статистика"
+
+        # ПРИМЕЧАНИЕ. Команда будет работать если у участника будут
+        # ВСЕ роли из этого списка!!!
+        required-roles: []
+
+        # ПРИМЕЧАНИЕ. Команда будет работать если у участника будут
+        # ВСЕ права из этого списка!!!
+        # все права можно найти тут:
+        # https://ci.dv8tion.net/job/JDA5/javadoc/net/dv8tion/jda/api/Permission.html
+        required-permissions:
+          - ADMINISTRATOR
+
         messages:
+          no-permission: "Недостаточно прав для использования этой команды"
+          no-roles: "Недостаточно ролей для использования этой команды"
           user-not-found: "этот участник не найден!"
           user-stats: |
             Статистика {user}
