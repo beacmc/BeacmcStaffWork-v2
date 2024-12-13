@@ -23,26 +23,6 @@ public class CommandListener implements Listener {
         users = manager.getStaffPlayers();
     }
 
-    /*EventHandler
-    public void onCommand(PlayerCommandPreprocessEvent event) {
-        if(!Config.getBoolean("settings.work.commands.enable"))
-            return;
-
-        final Player player = event.getPlayer();
-
-        if(Config.getBoolean("settings.work.enable-bypass-permission") && player.hasPermission("beacmcstaffwork.work-limits.bypass"))
-            return;
-
-        if(!manager.contains(player)) {
-            List<String> disableCommands = Config.getStringList("settings.work.commands.disable-commands");
-            String cmd = event.getMessage().split(" ")[0];
-            if(disableCommands.contains(cmd.toLowerCase())) {
-                player.sendMessage(Message.fromConfig("settings.messages.disable-command"));
-                event.setCancelled(true);
-            }
-        }
-    }*/
-
     @EventHandler
     public void onCommand(PlayerCommandPreprocessEvent event) {
         if(!Config.getBoolean("settings.work.commands.enable"))
