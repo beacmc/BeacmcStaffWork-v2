@@ -23,7 +23,7 @@ public class CommandListener implements Listener {
         users = manager.getStaffPlayers();
     }
 
-    @EventHandler
+    /*EventHandler
     public void onCommand(PlayerCommandPreprocessEvent event) {
         if(!Config.getBoolean("settings.work.commands.enable"))
             return;
@@ -40,6 +40,23 @@ public class CommandListener implements Listener {
                 player.sendMessage(Message.fromConfig("settings.messages.disable-command"));
                 event.setCancelled(true);
             }
+        }
+    }*/
+
+    @EventHandler
+    public void onCommand(PlayerCommandPreprocessEvent event) {
+        if(!Config.getBoolean("settings.work.commands.enable"))
+            return;
+
+        final Player player = event.getPlayer();
+
+        if(Config.getBoolean("settings.work.enable-bypass-permission") && player.hasPermission("beacmcstaffwork.work-limits.bypass"))
+            return;
+
+        if(!manager.contains(player)) {
+            List<String> disableCommands = Config.getStringList("settings.work.commands.disable-commands");
+            String command = event.getMessage();
+            event.setCancelled(disableCommands.stream().anyMatch(command::startsWith));
         }
     }
 }
