@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
 
 public class StatsCommand extends DiscordCommand {
@@ -25,7 +26,6 @@ public class StatsCommand extends DiscordCommand {
     @Override
     public void execute(Member member, MessageChannelUnion channel, String[] args) {
         try {
-
             User user = getUser(member, args.length > 0 ? args[0] : null);
 
             if (user == null) {
@@ -45,15 +45,16 @@ public class StatsCommand extends DiscordCommand {
                             .replace("{unmutes}", String.valueOf(user.getUnmutes()))
 
             ).queue();
-        } catch (SQLException | IllegalArgumentException ignored) {
+        } catch (SQLException | IllegalArgumentException e) {
+            e.printStackTrace();
         }
     }
 
     private User getUser(Member member, String name) throws SQLException {
-        if (name != null) {
+        if (name != null && !name.isEmpty()) {
             return userDao.queryForId(name.toLowerCase());
         }
-        return userDao.queryForEq("discord_id", member.getIdLong()).stream()
+        return userDao.queryForEq("discord_id", member.getId()).stream()
                 .findFirst()
                 .orElse(null);
     }
