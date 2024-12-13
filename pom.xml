@@ -6,7 +6,7 @@
 
     <groupId>com.beacmc</groupId>
     <artifactId>BeacmcStaffWork</artifactId>
-    <version>v2.9-BETA</version>
+    <version>v2.9.1-BETA</version>
     <packaging>jar</packaging>
 
     <name>BeacmcStaffWork</name>
@@ -21,7 +21,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.4</version>
+                <version>3.6.0</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -29,7 +29,17 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <artifactSet>
+                                <excludes>
+                                    <exclude>org/bstats/**</exclude>
+                                </excludes>
+                            </artifactSet>
+                            <relocations>
+                                <relocation>
+                                    <pattern>org.bstats</pattern>
+                                    <shadedPattern>com.beacmc.beacmcstaffwork.shaded.bstats</shadedPattern>
+                                </relocation>
+                            </relocations>
                         </configuration>
                     </execution>
                 </executions>
@@ -96,6 +106,11 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>org.bstats</groupId>
+            <artifactId>bstats-bukkit</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+        <dependency>
             <groupId>com.github.DevLeoko</groupId>
             <artifactId>AdvancedBan</artifactId>
             <version>v2.3.0</version>
@@ -129,7 +144,7 @@
         <dependency>
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
-            <version>5.0.0-beta.20</version>
+            <version>5.2.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
