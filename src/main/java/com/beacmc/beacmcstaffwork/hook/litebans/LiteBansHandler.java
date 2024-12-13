@@ -39,7 +39,7 @@ public class LiteBansHandler {
                     if (user == null)
                         return;
 
-                    if (staffPlayer.isOnline() || (!staffPlayer.isWork() && Config.getBoolean("settings.required-work-on-add-statistic")))
+                    if (!staffPlayer.isOnline() || (!staffPlayer.isWork() && Config.getBoolean("settings.required-work-on-add-statistic")))
                         return;
 
                     switch (entry.getType()) {
