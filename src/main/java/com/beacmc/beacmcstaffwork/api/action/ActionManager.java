@@ -2,69 +2,27 @@ package com.beacmc.beacmcstaffwork.api.action;
 
 import com.beacmc.beacmcstaffwork.BeacmcStaffWork;
 import com.beacmc.beacmcstaffwork.player.StaffPlayer;
+import com.beacmc.beacmcstaffwork.util.Pair;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
-public class ActionManager {
+public interface ActionManager {
 
-    private final HashSet<Action> registerActions;
-    private final BeacmcStaffWork plugin;
+    void registerAction(Action action);
 
-    public ActionManager() {
-        plugin = BeacmcStaffWork.getInstance();
-        registerActions = new HashSet<>();
-    }
+    void registerActions(Action... actions);
 
-    public void registerAction(Action action) {
-        if(isRegisterAction(action)) {
-            plugin.getLogger().severe("action " + action.getName() + " already registered");
-            return;
-        }
-        plugin.getLogger().info("register action " + action.getName() + " - " + action.getDescription());
-        registerActions.add(action);
-    }
+    void unregisterAction(Action action);
 
-    public void registerActions(Action... actions) {
-        Arrays.stream(actions).forEach(this::registerAction);
-    }
+    void unregisterAllActions();
 
-    public void unregisterAction(Action action) {
-        if(!isRegisterAction(action)) {
-            plugin.getLogger().severe("action " + action.getName() + " not registered");
-            return;
-        }
-        registerActions.remove(action);
-    }
+    boolean isRegisterAction(Action action);
 
-    public void unregisterAllActions() {
-        for (Action action : registerActions) unregisterAction(action);
-    }
+    void execute(OfflinePlayer player, List<String> actions, Pair<String, Object>... pairs);
 
-    public boolean isRegisterAction(Action action) {
-        String name = action.getName();
-        for (Action execute : registerActions) {
-            if(name.equals(execute.getName()))
-                return true;
-        }
-        return false;
-    }
-
-    public void execute(StaffPlayer player, List<String> actions) {
-        for (String execute : actions) {
-            for (Action action : registerActions) {
-                String name = action.getName();
-                if (!execute.startsWith(name))
-                    continue;
-
-                action.execute(player, execute.replace(name, "").trim());
-            }
-        }
-    }
-
-    public HashSet<Action> getRegisterActions() {
-        return registerActions;
-    }
+    HashSet<Action> getRegisterActions();
 }

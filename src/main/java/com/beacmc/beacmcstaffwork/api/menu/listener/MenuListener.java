@@ -4,7 +4,7 @@ package com.beacmc.beacmcstaffwork.api.menu.listener;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.beacmc.beacmcstaffwork.api.menu.container.Panel;
+import com.beacmc.beacmcstaffwork.api.menu.Panel;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -31,8 +31,7 @@ public class MenuListener implements Listener {
     public void onClick(InventoryClickEvent event) {
         if (event.getClickedInventory() != null) {
             Inventory inventory = event.getClickedInventory();
-            if (inventory.getHolder() instanceof Panel) {
-                Panel panel = (Panel) inventory.getHolder();
+            if (inventory.getHolder() instanceof Panel panel) {
                 event.setCancelled(true);
                 panel.handleClick(event);
             }
@@ -42,8 +41,7 @@ public class MenuListener implements Listener {
     @EventHandler
     public void onClose(InventoryCloseEvent event) {
         Inventory inventory = event.getInventory();
-        if (inventory.getHolder() instanceof Panel) {
-            Panel panel = (Panel) inventory.getHolder();
+        if (inventory.getHolder() instanceof Panel panel) {
             panel.handleClose(event);
         }
     }
@@ -51,8 +49,7 @@ public class MenuListener implements Listener {
     @EventHandler
     public void onDrag(InventoryDragEvent event) {
         Inventory inventory = event.getInventory();
-        if (inventory.getHolder() instanceof Panel) {
-            Panel panel = (Panel) inventory.getHolder();
+        if (inventory.getHolder() instanceof Panel panel) {
             panel.handleDrag(event);
         }
     }
@@ -60,8 +57,7 @@ public class MenuListener implements Listener {
     @EventHandler
     public void onOpen(InventoryOpenEvent event) {
         Inventory inventory = event.getInventory();
-        if (inventory.getHolder() instanceof Panel) {
-            Panel panel = (Panel) inventory.getHolder();
+        if (inventory.getHolder() instanceof Panel panel) {
             panel.handleOpen(event);
         }
     }

@@ -1,6 +1,10 @@
 package com.beacmc.beacmcstaffwork.api.action;
 
 import com.beacmc.beacmcstaffwork.player.StaffPlayer;
+import com.beacmc.beacmcstaffwork.util.Pair;
+import org.bukkit.OfflinePlayer;
+
+import java.util.Map;
 
 public interface Action {
 
@@ -8,5 +12,9 @@ public interface Action {
 
     String getDescription();
 
-    void execute(StaffPlayer player, String params);
+    void execute(OfflinePlayer player, String params, Pair<String, Object>... pairs);
+
+    default void execute(StaffPlayer player, String param, Pair<String, Object>... pairs) {
+        execute(player.getPlayer(), param, pairs);
+    }
 }

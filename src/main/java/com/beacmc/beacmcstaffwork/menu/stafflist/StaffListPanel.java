@@ -1,50 +1,57 @@
-package com.beacmc.beacmcstaffwork.menu;
+package com.beacmc.beacmcstaffwork.menu.stafflist;
 
 import com.beacmc.beacmcstaffwork.BeacmcStaffWork;
 import com.beacmc.beacmcstaffwork.api.menu.annotation.Click;
-import com.beacmc.beacmcstaffwork.api.menu.container.Panel;
-import com.beacmc.beacmcstaffwork.config.Config;
+import com.beacmc.beacmcstaffwork.api.menu.Panel;
+import com.beacmc.beacmcstaffwork.config.MainConfiguration;
 import com.beacmc.beacmcstaffwork.player.StaffPlayer;
 import com.beacmc.beacmcstaffwork.util.Color;
+import com.beacmc.beacmcstaffwork.util.Message;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-public class StaffPanel extends Panel {
+public class StaffListPanel extends Panel {
 
-    private final List<StaffPlayer> workedPlayers;
     private final List<Integer> playerSlots;
     private final int itemsPerPage;
+    private Set<StaffPlayer> workedPlayers;
     private int currentPage;
 
-    public StaffPanel() {
+    public StaffListPanel() {
         super(BeacmcStaffWork.getInstance());
+        final ConfigurationSection staffListSettings = BeacmcStaffWork.getMainConfig().getStaffPanelSettings();
         this.currentPage = 0;
-        this.playerSlots = Config.getIntegerList("settings.menu.items.staff-player.slots");
-        this.workedPlayers = new ArrayList<>(BeacmcStaffWork.getUsers());
+        this.playerSlots = staffListSettings.getIntegerList("items.staff-player.slots");
         this.itemsPerPage = playerSlots.size();
     }
 
     @Override
     public int getSize() {
-        return Config.getInteger("settings.menu.size");
+        final ConfigurationSection staffListSettings = BeacmcStaffWork.getMainConfig().getStaffPanelSettings();
+        return staffListSettings.getInt("size");
     }
 
     @Override
     public String getTitle() {
-        return Color.compile(Config.getString("settings.menu.title"));
+        return Message.fromConfig("settings.menu.title");
     }
 
     @Override
     public void setItems() {
+        final MainConfiguration config = BeacmcStaffWork.getMainConfig();
+        final ConfigurationSection staffListSettings = config.getStaffPanelSettings();
+
+        this.workedPlayers = BeacmcStaffWork.getStaffWorkManager().getWorkedPlayers();
         inventory.clear();
 
         List<StaffPlayer> pagePlayers = getPagePlayers();
@@ -55,18 +62,18 @@ public class StaffPanel extends Panel {
         }
 
         if (currentPage > 0) {
-            inventory.setItem(Config.getInteger("settings.menu.items.previous-page.slot"), createNavigationItem(
-                    Material.valueOf(Config.getString("settings.menu.items.previous-page.material")),
-                    Config.getString("settings.menu.items.previous-page.name"),
-                    Config.getStringList("settings.menu.items.previous-page.lore")
+            inventory.setItem(staffListSettings.getInt("items.previous-page.slot"), createNavigationItem(
+                    Material.valueOf(staffListSettings.getString("items.previous-page.material")),
+                    staffListSettings.getString("items.previous-page.name"),
+                    staffListSettings.getStringList("items.previous-page.lore")
             ));
         }
 
         if (currentPage < getTotalPages() - 1) {
-            inventory.setItem(Config.getInteger("settings.menu.items.next-page.slot"), createNavigationItem(
-                    Material.valueOf(Config.getString("settings.menu.items.next-page.material")),
-                    Config.getString("settings.menu.items.next-page.name"),
-                    Config.getStringList("settings.menu.items.next-page.lore")
+            inventory.setItem(staffListSettings.getInt("items.next-page.slot"), createNavigationItem(
+                    Material.valueOf(staffListSettings.getString("items.next-page.material")),
+                    staffListSettings.getString("items.next-page.name"),
+                    staffListSettings.getStringList("items.next-page.lore")
             ));
         }
     }
@@ -75,24 +82,27 @@ public class StaffPanel extends Panel {
     public void onClick(InventoryClickEvent event) {
         if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) return;
 
-        int slot = event.getSlot();
+        final int slot = event.getSlot();
+        final MainConfiguration config = BeacmcStaffWork.getMainConfig();
 
-        if (slot == Config.getInteger("settings.menu.items.previous-page.slot") && currentPage > 0) {
+        if (slot == config.getStaffPanelSettings().getInt("items.previous-page.slot") && currentPage > 0) {
             currentPage--;
             update();
-        } else if (slot == Config.getInteger("settings.menu.items.next-page.slot") && currentPage < getTotalPages() - 1) {
+        } else if (slot == config.getStaffPanelSettings().getInt("items.next-page.slot") && currentPage < getTotalPages() - 1) {
             currentPage++;
             update();
         }
     }
 
     private ItemStack createPlayerSkull(StaffPlayer staffPlayer) {
+        final MainConfiguration config = BeacmcStaffWork.getMainConfig();
+
         ItemStack skull = new ItemStack(Material.PLAYER_HEAD);
         SkullMeta meta = (SkullMeta) skull.getItemMeta();
         if (meta != null) {
             meta.setOwningPlayer(staffPlayer.getPlayer());
-            meta.setDisplayName(formattedMessage(staffPlayer.getPlayer(), Config.getString("settings.menu.items.staff-player.name")));
-            meta.setLore(Config.getStringList("settings.menu.items.staff-player.lore").stream()
+            meta.setDisplayName(formattedMessage(staffPlayer.getPlayer(), config.getStaffPanelSettings().getString("items.staff-player.name")));
+            meta.setLore(config.getStaffPanelSettings().getStringList("items.staff-player.lore").stream()
                     .map(lore -> formattedMessage(staffPlayer.getPlayer(), lore))
                     .collect(Collectors.toList()));
         }
@@ -118,7 +128,7 @@ public class StaffPanel extends Panel {
     private List<StaffPlayer> getPagePlayers() {
         int start = currentPage * itemsPerPage;
         int end = Math.min(start + itemsPerPage, workedPlayers.size());
-        return workedPlayers.subList(start, end);
+        return workedPlayers.stream().toList().subList(start, end);
     }
 
     private int getTotalPages() {

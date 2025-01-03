@@ -1,25 +1,49 @@
 package com.beacmc.beacmcstaffwork.database;
 
 import com.beacmc.beacmcstaffwork.BeacmcStaffWork;
-import com.beacmc.beacmcstaffwork.config.Config;
+import org.bukkit.configuration.ConfigurationSection;
 
 public enum DatabaseType {
 
-    SQLITE("jdbc:sqlite:" + BeacmcStaffWork.getInstance().getDataFolder().getAbsolutePath() + "/beacmcstaffwork.db"),
+    SQLITE {
 
-    MYSQL("jdbc:mysql://" + Config.getString("settings.data.host") + "/" + Config.getString("settings.data.database")),
+       final BeacmcStaffWork plugin = BeacmcStaffWork.getInstance();
 
-    MARIADB("jdbc:mariadb://" + Config.getString("settings.data.host") + "/" + Config.getString("settings.data.database")),
-    POSTGRESQL("jdbc:postgresql://" + Config.getString("settings.data.host") + "/" + Config.getString("settings.data.database"));
+        @Override
+        public String getUrl() {
+            return "jdbc:sqlite:" + plugin.getDataFolder().getAbsolutePath() + "/beacmcstaffwork.db";
+        }
+    },
+
+    MYSQL {
+
+        final ConfigurationSection databaseSettings = BeacmcStaffWork.getMainConfig().getDatabaseSettings();
+
+        @Override
+        public String getUrl() {
+            return "jdbc:mysql://" + databaseSettings.getString("host") + "/" + databaseSettings.getString("database");
+        }
+    },
+
+    MARIADB {
+
+        final ConfigurationSection databaseSettings = BeacmcStaffWork.getMainConfig().getDatabaseSettings();
+
+        @Override
+        public String getUrl() {
+            return "jdbc:mariadb://" + databaseSettings.getString("host") + "/" + databaseSettings.getString("database");
+        }
+    },
+    POSTGRESQL {
+
+        final ConfigurationSection databaseSettings = BeacmcStaffWork.getMainConfig().getDatabaseSettings();
+
+        @Override
+        public String getUrl() {
+            return "jdbc:postgresql://" + databaseSettings.getString("host") + "/" + databaseSettings.getString("database");
+        }
+    };
 
 
-    DatabaseType(String url) {
-        this.url = url;
-    }
-
-    private final String url;
-
-    public String getUrl() {
-        return url;
-    }
+    public abstract String getUrl();
 }

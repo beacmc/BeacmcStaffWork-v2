@@ -2,25 +2,28 @@ package com.beacmc.beacmcstaffwork.util;
 
 
 import com.beacmc.beacmcstaffwork.BeacmcStaffWork;
-import com.beacmc.beacmcstaffwork.config.Config;
+import com.beacmc.beacmcstaffwork.config.MainConfiguration;
+import org.bukkit.configuration.ConfigurationSection;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Properties;
+import java.util.List;
 
 public class UpdateChecker {
 
     public static void startCheck() {
-        if (!Config.getBoolean("settings.update-check"))
+        final MainConfiguration config = BeacmcStaffWork.getMainConfig();
+        final ConfigurationSection settings = config.getSettings();
+        final ConfigurationSection messages = config.getSettings();
+
+        if (!settings.getBoolean("update-check"))
             return;
 
         String version = UpdateChecker.getActualVersion();
         if (!version.equals(BeacmcStaffWork.getInstance().getDescription().getVersion())) {
-            ArrayList<String> list = new ArrayList<>(Config.getStringList("settings.messages.update-check-console"));
+            List<String> list = messages.getStringList("update-check-console");
             list.forEach(execute ->
                     System.out.println(Color.compile(execute).replace("{current_version}", BeacmcStaffWork.getInstance().getDescription().getVersion()).replace("{latest_version}", version)));
         }

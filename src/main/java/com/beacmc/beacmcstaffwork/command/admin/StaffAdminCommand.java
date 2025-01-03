@@ -5,9 +5,8 @@ import com.beacmc.beacmcstaffwork.command.admin.subcommand.DeleteUserSubcommand;
 import com.beacmc.beacmcstaffwork.command.admin.subcommand.ReloadSubcommand;
 import com.beacmc.beacmcstaffwork.command.admin.subcommand.ResetSubcommand;
 import com.beacmc.beacmcstaffwork.command.admin.subcommand.StatsSubcommand;
-import com.beacmc.beacmcstaffwork.util.Color;
 import com.beacmc.beacmcstaffwork.api.command.Command;
-import com.beacmc.beacmcstaffwork.config.Config;
+import com.beacmc.beacmcstaffwork.util.Message;
 import org.bukkit.command.CommandSender;
 
 public class StaffAdminCommand extends Command {
@@ -23,8 +22,7 @@ public class StaffAdminCommand extends Command {
     @Override
     public void execute(CommandSender sender, org.bukkit.command.Command command, String label, String[] args) {
         if (!sender.hasPermission("beacmcstaffwork.admin")){
-            sender.sendMessage(Color.compile(Config.getString("settings.messages.no-permission")
-                    .replace("{PREFIX}", Config.getString("settings.prefix"))));
+            sender.sendMessage(Message.getMessageFromConfig("no-permission"));
             return;
         }
 

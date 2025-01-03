@@ -4,14 +4,19 @@ import com.beacmc.beacmcstaffwork.BeacmcStaffWork;
 import com.beacmc.beacmcstaffwork.api.action.ActionManager;
 import com.beacmc.beacmcstaffwork.api.event.PlayerDisableWorkEvent;
 import com.beacmc.beacmcstaffwork.api.event.PlayerEnableWorkEvent;
+import com.beacmc.beacmcstaffwork.config.MainConfiguration;
+import com.beacmc.beacmcstaffwork.util.Message;
 import com.beacmc.beacmcstaffwork.work.StaffWorkManager;
 import com.beacmc.beacmcstaffwork.api.command.Command;
 import com.beacmc.beacmcstaffwork.player.StaffPlayer;
-import com.beacmc.beacmcstaffwork.config.Config;
+import me.clip.placeholderapi.PlaceholderAPI;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+
+import java.util.List;
 
 
 public class StaffCommand extends Command {
@@ -28,9 +33,18 @@ public class StaffCommand extends Command {
     }
 
     public void execute(CommandSender sender, org.bukkit.command.Command command, String label, String[] args) {
-        if (!(sender instanceof Player)) return;
+        if (!(sender instanceof Player player)) return;
 
-        StaffPlayer moderator = manager.getStaffPlayerByPlayer((Player) sender, true);
+        final StaffPlayer moderator = manager.getStaffPlayerByPlayer((Player) sender);
+        final MainConfiguration config = BeacmcStaffWork.getMainConfig();
+        final ConfigurationSection actions = config.getActions();
+        final ConfigurationSection messages = config.getMessages();
+
+        if (moderator == null) {
+            player.sendMessage(Message.getMessageFromConfig("staff-player-not-found"));
+            return;
+        }
+
         if (!moderator.hasPermission("beacmcstaffwork.use")) {
             moderator.sendMessage("settings.messages.no-permission");
             return;
@@ -38,18 +52,18 @@ public class StaffCommand extends Command {
 
         if (args.length == 0) {
 
-            if (Config.getString("settings.actions." + moderator.getPrimaryGroup()) == null) {
-                moderator.sendMessage("settings.messages.no-group");
+            if (actions.getString(moderator.getPrimaryGroup()) == null) {
+                moderator.sendMessage(Message.getMessageFromConfig("no-group"));
                 return;
             }
             if(moderator.isWork()) {
                 PlayerDisableWorkEvent event = new PlayerDisableWorkEvent(moderator);
                 Bukkit.getPluginManager().callEvent(event);
                 if (!event.isCancelled()) {
-                    moderator.sendTitle("settings.titles.on-disable-work.title", "settings.titles.on-disable-work.subtitle");
+                    moderator.sendTitle(Message.fromConfig("settings.titles.on-disable-work.title"), Message.fromConfig("settings.titles.on-disable-work.subtitle"));
                     moderator.stopWork();
-                    moderator.sendMessage("settings.messages.on-disable-work");
-                    action.execute(moderator, Config.getStringList("settings.actions." + moderator.getPrimaryGroup() + ".disable-work"));
+                    moderator.sendMessage(Message.getMessageFromConfig("on-disable-work"));
+                    action.execute(moderator.getPlayer(), actions.getStringList(moderator.getPrimaryGroup() + ".disable-work"));
                 }
                 return;
             }
@@ -57,18 +71,24 @@ public class StaffCommand extends Command {
             PlayerEnableWorkEvent event = new PlayerEnableWorkEvent(moderator);
             Bukkit.getPluginManager().callEvent(event);
             if (!event.isCancelled()) {
-                moderator.sendTitle("settings.titles.on-enable-work.title", "settings.titles.on-enable-work.subtitle");
+                moderator.sendTitle(Message.fromConfig("settings.titles.on-enable-work.title"), Message.fromConfig("settings.titles.on-enable-work.subtitle"));
                 moderator.startWork();
-                moderator.sendMessage("settings.messages.on-enable-work");
-                action.execute(moderator, Config.getStringList("settings.actions." + moderator.getPrimaryGroup() + ".enable-work"));
+                moderator.sendMessage(Message.getMessageFromConfig("on-enable-work"));
+                action.execute(moderator.getPlayer(), actions.getStringList(moderator.getPrimaryGroup() + ".enable-work"));
             }
             return;
         }
         if(args.length == 1 && args[0].equalsIgnoreCase("stats")) {
-            moderator.sendMessageList("settings.messages.stats");
+            List<String> lines = messages.getStringList("stats").stream()
+                    .map(line -> Message.of(PlaceholderAPI.setPlaceholders(moderator.getPlayer(), line)))
+                    .toList();
+            moderator.sendMessage(lines);
             return;
         }
-        moderator.sendMessageList("settings.messages.help");
+        List<String> lines = messages.getStringList("stats").stream()
+                .map(Message::of)
+                .toList();
+        moderator.sendMessage(lines);
     }
 }
 

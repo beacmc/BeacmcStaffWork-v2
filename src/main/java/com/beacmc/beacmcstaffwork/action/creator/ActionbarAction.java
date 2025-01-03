@@ -1,9 +1,9 @@
-package com.beacmc.beacmcstaffwork.util.action;
+package com.beacmc.beacmcstaffwork.action.creator;
 
 import com.beacmc.beacmcstaffwork.api.action.Action;
-import com.beacmc.beacmcstaffwork.player.StaffPlayer;
 import com.beacmc.beacmcstaffwork.util.Color;
-import org.bukkit.entity.Player;
+import com.beacmc.beacmcstaffwork.util.Pair;
+import org.bukkit.OfflinePlayer;
 
 public class ActionbarAction implements Action {
 
@@ -19,8 +19,8 @@ public class ActionbarAction implements Action {
     }
 
     @Override
-    public void execute(StaffPlayer staffPlayer, String params) {
-        Player player = staffPlayer.getPlayer();
-        player.sendActionBar(Color.compile(params));
+    public void execute(OfflinePlayer player, String params, Pair<String, Object>... pairs) {
+        if (player != null && player.isOnline())
+            player.getPlayer().sendActionBar(Color.compile(params));
     }
 }

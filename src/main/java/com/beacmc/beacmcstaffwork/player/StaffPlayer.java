@@ -3,32 +3,28 @@ package com.beacmc.beacmcstaffwork.player;
 import com.beacmc.beacmcstaffwork.BeacmcStaffWork;
 import com.beacmc.beacmcstaffwork.database.Database;
 import com.beacmc.beacmcstaffwork.database.model.User;
-import com.beacmc.beacmcstaffwork.util.Color;
-import com.beacmc.beacmcstaffwork.config.Config;
-import me.clip.placeholderapi.PlaceholderAPI;
+import com.beacmc.beacmcstaffwork.work.StaffWorkManager;
 import net.luckperms.api.LuckPerms;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
-import java.sql.SQLException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class StaffPlayer {
 
 
-    private final LuckPerms luckPerms = BeacmcStaffWork.getLuckPerms();
+    private final LuckPerms luckPerms;
+    private final StaffWorkManager staffWorkManager;
     private final Player player;
-    private static User user;
     private final Database database;
+    private User user;
 
-    public StaffPlayer(Player player) {
+    public StaffPlayer(Player player, User user) {
+        this.database = BeacmcStaffWork.getDatabase();
+        this.staffWorkManager = BeacmcStaffWork.getStaffWorkManager();
+        this.luckPerms = BeacmcStaffWork.getLuckPerms();
         this.player = player;
-        database = BeacmcStaffWork.getDatabase();
-        try {
-            user = database.getUserDao().queryForId(player.getName().toLowerCase());
-        } catch (SQLException ignored) { }
+        this.user = user;
     }
 
     public String getName() {
@@ -36,46 +32,37 @@ public class StaffPlayer {
     }
 
     public boolean isWork() {
-        if(isModerator())
-            return false;
-        return user.isWork();
+        return user.isWork() && isModerator();
     }
 
     public String getIPAddress() {
-        return player.getAddress().getHostName();
+        return player.getAddress() != null ? player.getAddress().getHostName() : null;
     }
 
     public void stopWork() {
-        if(!this.hasPermission("beacmcstaffwork.use") && !this.isWork())
+        if (!this.isWork())
             return;
 
-        try {
-            long time = (System.currentTimeMillis() - user.getWorkStart()) / 1000;
-            database.getUserDao().update(user.setTime(time + user.getTime()).setWork(false).setWorkStart(0));
-            BeacmcStaffWork.getUsers().remove(this);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        long time = (System.currentTimeMillis() - user.getWorkStart()) / 1000;
+        database.getUserDao().updateAsync(user.setTime(time + user.getTime()).setWork(false).setWorkStart(0));
+
+        staffWorkManager.updatePlayer(this);
     }
 
     public void startWork() {
-        if(!this.hasPermission("beacmcstaffwork.use") || this.isWork())
+        if (!this.hasPermission("beacmcstaffwork.use") || this.isWork())
             return;
 
-        try {
-            if(isModerator()) {
-                user = new User(player.getName().toLowerCase(), null, true, 0, 0, 0, 0, 0, 0, 0, 0);
-                database.getUserDao().createOrUpdate(user);
-            }
-            database.getUserDao().update(user.setWorkStart(System.currentTimeMillis()).setWork(true));
-            BeacmcStaffWork.getUsers().add(this);
-        } catch (SQLException e) {
-            e.printStackTrace();
+        if (!isModerator()) {
+            user = new User(player.getName().toLowerCase(), null, true, 0, 0, 0, 0, 0, 0, 0, 0);
+            database.getUserDao().createOrUpdateAsync(user);
         }
+        database.getUserDao().updateAsync(user.setWorkStart(System.currentTimeMillis()).setWork(true));
+        staffWorkManager.getStaffPlayers().add(this);
     }
 
     public boolean isModerator() {
-        return user == null;
+        return user != null;
     }
 
     public UUID getID() {
@@ -95,38 +82,23 @@ public class StaffPlayer {
     }
 
     public String getPrimaryGroup() {
-        net.luckperms.api.model.user.User user = luckPerms.getPlayerAdapter(Player.class).getUser(player);
-        return user.getPrimaryGroup();
+        return luckPerms.getPlayerAdapter(Player.class)
+                .getUser(player)
+                .getPrimaryGroup();
     }
 
-    public void sendMessage(String path) {
-        if(Config.getString(path) == null || Config.getString(path).isEmpty())
-            return;
-
-        player.sendMessage(Color.compile(Config.getString(path)
-                .replace("{PREFIX}", Config.getString("settings.prefix"))
-        ));
+    public void sendMessage(String message) {
+        if (message != null && !message.isEmpty())
+            player.sendMessage(message);
     }
 
     public void sendTitle(String title, String subtitle) {
-        player.sendTitle(Color.compile(Config.getString(title)), Color.compile(Config.getString(subtitle)),
-        10, 10, 10);
+        player.sendTitle(title, subtitle, 10, 10, 10);
     }
 
-    public void sendMessageList(String path) {
-        List<String> lines = Config.getStringList(path).stream()
-                .map(x -> Color.compile(x.replace("{PREFIX}", Config.getString("settings.prefix"))))
-                .collect(Collectors.toList());
-
-        for (String line : lines) {
-            player.sendMessage(PlaceholderAPI.setPlaceholders(player, line));
-        }
-    }
-
-    @Nullable
-    public static StaffPlayer getStaffPlayerByName(String name) {
-        Player execute = Bukkit.getPlayer(name);
-        return execute != null ? new StaffPlayer(execute) : null;
+    public void sendMessage(List<String> message) {
+        if (message != null && !message.isEmpty())
+            message.forEach(player::sendMessage);
     }
 
     @Nullable
@@ -136,9 +108,14 @@ public class StaffPlayer {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof String) {
-            return getName().equals(obj);
-        }
-        return super.equals(obj);
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        StaffPlayer that = (StaffPlayer) obj;
+        return Objects.equals(getID(), that.getID());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getID());
     }
 }

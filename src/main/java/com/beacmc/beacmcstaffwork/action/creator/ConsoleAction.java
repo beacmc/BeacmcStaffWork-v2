@@ -1,9 +1,11 @@
-package com.beacmc.beacmcstaffwork.util.action;
+package com.beacmc.beacmcstaffwork.action.creator;
 
 import com.beacmc.beacmcstaffwork.api.action.Action;
 import com.beacmc.beacmcstaffwork.player.StaffPlayer;
+import com.beacmc.beacmcstaffwork.util.Pair;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 
 public class ConsoleAction implements Action {
 
@@ -18,9 +20,9 @@ public class ConsoleAction implements Action {
     }
 
     @Override
-    public void execute(StaffPlayer staffPlayer, String params) {
+    public void execute(OfflinePlayer player, String params, Pair<String, Object>... pairs) {
         Bukkit.dispatchCommand(
                 Bukkit.getConsoleSender(),
-                PlaceholderAPI.setPlaceholders(staffPlayer.getPlayer(), params));
+                PlaceholderAPI.setPlaceholders(player, params));
     }
 }
