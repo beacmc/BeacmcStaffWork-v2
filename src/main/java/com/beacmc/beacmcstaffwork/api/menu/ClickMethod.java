@@ -1,4 +1,4 @@
-package com.beacmc.beacmcstaffwork.api.menu.container;
+package com.beacmc.beacmcstaffwork.api.menu;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;

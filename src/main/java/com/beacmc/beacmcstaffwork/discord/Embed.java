@@ -11,7 +11,7 @@ public class Embed {
         builder.setColor(Color.decode(color));
         builder.setTitle(title, titleUrl);
         builder.setDescription(description);
-        if(!image.isEmpty() || image != null) {
+        if(image != null && !image.isEmpty()) {
             builder.setImage(image);
         }
 

@@ -1,15 +1,15 @@
 package com.beacmc.beacmcstaffwork.command.admin.subcommand;
 
+import com.beacmc.beacmcstaffwork.BeacmcStaffWork;
 import com.beacmc.beacmcstaffwork.api.subcommand.Subcommand;
-import com.beacmc.beacmcstaffwork.config.Config;
-import com.beacmc.beacmcstaffwork.util.Color;
+import com.beacmc.beacmcstaffwork.util.Message;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class StatsSubcommand implements Subcommand {
 
@@ -20,25 +20,22 @@ public class StatsSubcommand implements Subcommand {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
+        final ConfigurationSection messages = BeacmcStaffWork.getMainConfig().getMessages();
+
         if (args.length == 2) {
             Player player = Bukkit.getPlayer(args[1]);
 
             if(player == null) {
-                sender.sendMessage(Color.compile(Config.getString("settings.messages.player-offline")
-                        .replace("{PREFIX}", Config.getString("settings.prefix"))
-                ));
+                sender.sendMessage(Message.getMessageFromConfig("player-offline"));
                 return;
             }
-            List<String> lines = Config.getStringList("settings.messages.stats").stream()
-                    .map(x -> Color.compile(PlaceholderAPI.setPlaceholders(player, x.replace("{PREFIX}", Config.getString("settings.prefix")))))
-                    .collect(Collectors.toList());
-
+            List<String> lines = messages.getStringList("stats").stream()
+                    .map(line -> Message.of(PlaceholderAPI.setPlaceholders(player, line)))
+                    .toList();
             lines.forEach(player::sendMessage);
             return;
         }
-        final String message = Color.compile(Config.getString("settings.messages.swa-stats-error-use")
-                .replace("{PREFIX}", Config.getString("settings.prefix")));
-        sender.sendMessage(message);
+        sender.sendMessage(Message.getMessageFromConfig("swa-stats-error-use"));
     }
 }
 

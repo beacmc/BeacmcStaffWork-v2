@@ -7,24 +7,25 @@ import com.j256.ormlite.table.TableInfo;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public interface UserDao {
 
-    User queryForId(String id) throws SQLException;
+    CompletableFuture<User> queryForIdAsync(String id);
 
-    int update(User user) throws SQLException;
+    CompletableFuture<User> updateAsync(User user);
 
-    Dao.CreateOrUpdateStatus createOrUpdate(User user) throws SQLException;
+    CompletableFuture<Void> createOrUpdateAsync(User user);
 
-    List<User> queryForAll() throws SQLException;
+    CompletableFuture<List<User>> queryForAllAsync();
 
-    List<User> queryForEq(String fieldName, Object value) throws SQLException;
+    CompletableFuture<List<User>> queryForEqAsync(String fieldName, Object value);
 
-    int executeRaw(String var1, String... var2) throws SQLException;
+    CompletableFuture<Void> executeRawAsync(String var1, String... var2);
 
     TableInfo<User, String> getTableInfo();
 
-    int delete(User user) throws SQLException;
+    CompletableFuture<Void> deleteAsync(User user);
 
     QueryBuilder<User, String> queryBuilder();
 }

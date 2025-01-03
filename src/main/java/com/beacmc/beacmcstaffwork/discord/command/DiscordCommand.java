@@ -1,7 +1,6 @@
 package com.beacmc.beacmcstaffwork.discord.command;
 
 import com.beacmc.beacmcstaffwork.BeacmcStaffWork;
-import com.beacmc.beacmcstaffwork.config.Config;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
@@ -17,7 +16,7 @@ public abstract class DiscordCommand extends ListenerAdapter {
 
     public DiscordCommand(JDA jda, String configPath) {
         jda.addEventListener(this);
-        configCommand = new ConfigurationCommand(Config.getSection(configPath));
+        configCommand = new ConfigurationCommand(BeacmcStaffWork.getMainConfig().getRealConfig().getConfigurationSection(configPath));
     }
 
     @Override

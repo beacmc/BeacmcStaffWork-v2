@@ -4,6 +4,7 @@ settings:
 
   prefix: "#FF8600&lʙ#FF8A00&lᴇ#FF8E00&lᴀ#FF9200&lᴄ#FF9500&lᴍ#FF9900&lᴄ#FF9D00&ls#FFA100&lᴛ#FFA500&lᴀ#FFA900&lғ#FFAD00&lғ#FFB100&lᴡ#FFB400&lᴏ#FFB800&lʀ#FFBC00&lᴋ #FFC000&l▸&7"
 
+  time-zone: "Europe/Moscow"
 
   # дефолтные
   chat-format: "&7[#FF8600&lSTAFFCHAT&7] &8&l| %luckperms_prefix%&7%player_name% &8&l> &f{MESSAGE}"
@@ -66,7 +67,6 @@ settings:
     database: beacmcstaffwork
     username: "beacmc"
     password: "VeryHardPassword123"
-
 
   discord:
 
@@ -185,6 +185,14 @@ settings:
       color: "#FFBB00"
       author-name: ""
       author-icon-url: ""
+
+  warns:
+    verbal:
+      display-name: "Устный выговор"
+      max: 2
+    severe:
+      display-name: "Строгий выговор"
+      max: 3
 
   menu:
     title: "&0&l> &8Люди которые работают в данный момент"
@@ -352,6 +360,7 @@ settings:
 
   # все сообщения плагина
   messages:
+    staff-player-not-found: "{PREFIX} &7Вы не являетесь модератором сервера"
     cooldown: "{PREFIX} &7Подождите перед повторным использованием данной команды."
     no-permission: "{PREFIX} &7Недостаточно полномочий для использования этой команды"
     reload: "{PREFIX} &7Конфигурация перезагружена"

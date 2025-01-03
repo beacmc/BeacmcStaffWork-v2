@@ -1,4 +1,4 @@
-package com.beacmc.beacmcstaffwork.util.messaging;
+package com.beacmc.beacmcstaffwork.listener;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;

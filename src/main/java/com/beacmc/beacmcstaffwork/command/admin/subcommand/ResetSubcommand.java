@@ -4,11 +4,10 @@ import com.beacmc.beacmcstaffwork.BeacmcStaffWork;
 import com.beacmc.beacmcstaffwork.api.subcommand.Subcommand;
 import com.beacmc.beacmcstaffwork.database.dao.UserDao;
 import com.beacmc.beacmcstaffwork.database.model.User;
-import com.beacmc.beacmcstaffwork.config.Config;
-import com.beacmc.beacmcstaffwork.util.Color;
+import com.beacmc.beacmcstaffwork.util.Message;
 import org.bukkit.command.CommandSender;
 
-import java.sql.SQLException;
+import java.util.concurrent.CompletableFuture;
 
 public class ResetSubcommand implements Subcommand {
 
@@ -19,53 +18,47 @@ public class ResetSubcommand implements Subcommand {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        if(args.length == 3) {
-            try {
-                UserDao userDao = BeacmcStaffWork.getDatabase().getUserDao();
-                User user = userDao.queryForId(args[1].toLowerCase());
-                if(user == null)
+        if (args.length == 3) {
+            UserDao userDao = BeacmcStaffWork.getDatabase().getUserDao();
+            CompletableFuture<User> future = userDao.queryForIdAsync(args[1].toLowerCase());
+            future.thenAccept(user -> {
+                if (user == null)
                     return;
 
                 switch (args[2].toLowerCase()) {
                     case "time": {
-                        userDao.update(user.setTime(0));
+                        userDao.updateAsync(user.setTime(0));
                         break;
                     }
                     case "bans": {
-                        userDao.update(user.setBans(0));
+                        userDao.updateAsync(user.setBans(0));
                         break;
                     }
                     case "kicks": {
-                        userDao.update(user.setKicks(0));
+                        userDao.updateAsync(user.setKicks(0));
                         break;
                     }
                     case "mutes": {
-                        userDao.update(user.setMutes(0));
+                        userDao.updateAsync(user.setMutes(0));
                         break;
                     }
                     case "unmutes": {
-                        userDao.update(user.setUnmutes(0));
+                        userDao.updateAsync(user.setUnmutes(0));
                         break;
                     }
                     case "unbans": {
-                        userDao.update(user.setUnbans(0));
+                        userDao.updateAsync(user.setUnbans(0));
                         break;
                     }
                     case "all": {
-                        userDao.update(user.setBans(0).setKicks(0).setTime(0).setMutes(0).setUnbans(0).setUnmutes(0));
+                        userDao.updateAsync(user.setBans(0).setKicks(0).setTime(0).setMutes(0).setUnbans(0).setUnmutes(0));
                         break;
                     }
                 }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            final String message = Color.compile(Config.getString("settings.messages.statistic-reset")
-                            .replace("{PREFIX}", Config.getString("settings.prefix")));
-            sender.sendMessage(message);
+                sender.sendMessage(Message.getMessageFromConfig("statistic-reset"));
+            });
             return;
         }
-        final String message = Color.compile(Config.getString("settings.messages.swa-reset-error-use")
-                .replace("{PREFIX}", Config.getString("settings.prefix")));
-        sender.sendMessage(message);
+        sender.sendMessage(Message.getMessageFromConfig("swa-reset-error-use"));
     }
 }

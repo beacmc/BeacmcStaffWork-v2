@@ -1,9 +1,12 @@
-package com.beacmc.beacmcstaffwork.util.action;
+package com.beacmc.beacmcstaffwork.action.creator;
 
 import com.beacmc.beacmcstaffwork.api.action.Action;
 import com.beacmc.beacmcstaffwork.player.StaffPlayer;
 import com.beacmc.beacmcstaffwork.util.Color;
+import com.beacmc.beacmcstaffwork.util.Message;
+import com.beacmc.beacmcstaffwork.util.Pair;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 
 public class BroadcastAction implements Action {
 
@@ -18,7 +21,8 @@ public class BroadcastAction implements Action {
     }
 
     @Override
-    public void execute(StaffPlayer player, String params) {
-        Bukkit.broadcastMessage(Color.compile(params));
+    public void execute(OfflinePlayer player, String params, Pair<String, Object>... pairs) {
+        Bukkit.getOnlinePlayers().forEach(p ->
+                p.sendMessage(Message.of(params)));
     }
 }

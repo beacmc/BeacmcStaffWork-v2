@@ -1,7 +1,5 @@
 package com.beacmc.beacmcstaffwork.api.addon;
 
-import org.bukkit.configuration.ConfigurationSection;
-
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;

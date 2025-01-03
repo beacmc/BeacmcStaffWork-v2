@@ -5,11 +5,10 @@ import com.beacmc.beacmcstaffwork.api.subcommand.Subcommand;
 import com.beacmc.beacmcstaffwork.database.Database;
 import com.beacmc.beacmcstaffwork.database.dao.UserDao;
 import com.beacmc.beacmcstaffwork.database.model.User;
-import com.beacmc.beacmcstaffwork.config.Config;
-import com.beacmc.beacmcstaffwork.util.Color;
+import com.beacmc.beacmcstaffwork.util.Message;
 import org.bukkit.command.CommandSender;
 
-import java.sql.SQLException;
+import java.util.concurrent.CompletableFuture;
 
 public class DeleteUserSubcommand implements Subcommand {
 
@@ -29,28 +28,19 @@ public class DeleteUserSubcommand implements Subcommand {
     @Override
     public void execute(CommandSender sender, String[] args) {
         if (args.length != 2) {
-            final String message = Color.compile(Config.getString("settings.messages.swa-delete-user-error-use")
-                    .replace("{PREFIX}", Config.getString("settings.prefix")));
-            sender.sendMessage(message);
+            sender.sendMessage(Message.getMessageFromConfig("swa-delete-user-error-use"));
             return;
         }
 
-        try {
-            User user = userDao.queryForId(args[1].toLowerCase());
-
+        CompletableFuture<User> future = userDao.queryForIdAsync(args[1].toLowerCase());
+        future.thenAccept(user -> {
             if (user == null) {
-                final String message = Color.compile(Config.getString("settings.messages.user-not-found")
-                        .replace("{PREFIX}", Config.getString("settings.prefix")));
-                sender.sendMessage(message);
+                sender.sendMessage(Message.getMessageFromConfig("user-not-found"));
                 return;
             }
 
-            userDao.delete(user);
-            final String message = Color.compile(Config.getString("settings.messages.user-deleted")
-                    .replace("{PREFIX}", Config.getString("settings.prefix")));
-            sender.sendMessage(message);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+            userDao.deleteAsync(user);
+            sender.sendMessage(Message.getMessageFromConfig("user-deleted"));
+        });
     }
 }

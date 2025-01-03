@@ -1,17 +1,16 @@
 package com.beacmc.beacmcstaffwork.discord.command.creator;
 
 import com.beacmc.beacmcstaffwork.BeacmcStaffWork;
-import com.beacmc.beacmcstaffwork.config.Config;
 import com.beacmc.beacmcstaffwork.discord.command.DiscordCommand;
 import com.beacmc.beacmcstaffwork.util.Color;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
-import me.clip.placeholderapi.PlaceholderAPI;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.Arrays;
 
@@ -39,10 +38,12 @@ public class StaffChatCommand extends DiscordCommand {
     }
 
     private void sendMessageToDiscord(Member member, String message, boolean isBroadcast) {
-        final String messageKey = isBroadcast ? "settings.discord-chat-broadcast-format" : "settings.discord-chat-format";
+        final ConfigurationSection settings = BeacmcStaffWork.getMainConfig().getSettings();
+
+        final String messageKey = isBroadcast ? "discord-chat-broadcast-format" : "discord-chat-format";
         final String channelKey = isBroadcast ? "broadcast-channel-id" : "chat-channel-id";
         final long channelId = getConfigurationCommand().getSection().getLong(channelKey);
-        final String messageTemplate = Config.getString(messageKey);
+        final String messageTemplate = settings.getString(messageKey);
         final String format = messageTemplate
                 .replace("{DISCORD_USERNAME}", member.getUser().getEffectiveName())
                 .replace("{MESSAGE}", String.join(" ", message));
@@ -55,8 +56,10 @@ public class StaffChatCommand extends DiscordCommand {
     }
 
     private void sendMessageToGame(Member member, String message, boolean isBroadcast) {
-        final String messageKey = isBroadcast ? "settings.chat-broadcast-discord-to-game" : "settings.chat-discord-to-game";
-        final String messageTemplate = Config.getString(messageKey);
+        final ConfigurationSection settings = BeacmcStaffWork.getMainConfig().getSettings();
+
+        final String messageKey = isBroadcast ? "chat-broadcast-discord-to-game" : "chat-discord-to-game";
+        final String messageTemplate = settings.getString(messageKey);
 
         final String format = Color.compile(messageTemplate)
                 .replace("{DISCORD_USERNAME}", member.getUser().getEffectiveName())

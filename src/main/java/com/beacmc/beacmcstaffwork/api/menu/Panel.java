@@ -1,10 +1,11 @@
-package com.beacmc.beacmcstaffwork.api.menu.container;
+package com.beacmc.beacmcstaffwork.api.menu;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.beacmc.beacmcstaffwork.api.menu.ClickMethod;
 import com.beacmc.beacmcstaffwork.api.menu.annotation.Click;
 import com.beacmc.beacmcstaffwork.api.menu.annotation.Close;
 import com.beacmc.beacmcstaffwork.api.menu.annotation.Drag;

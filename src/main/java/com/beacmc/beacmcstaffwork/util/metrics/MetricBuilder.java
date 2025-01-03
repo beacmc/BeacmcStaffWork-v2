@@ -1,7 +1,6 @@
 package com.beacmc.beacmcstaffwork.util.metrics;
 
 import com.beacmc.beacmcstaffwork.BeacmcStaffWork;
-import com.beacmc.beacmcstaffwork.config.Config;
 import org.bstats.charts.SimplePie;
 
 public class MetricBuilder {
@@ -14,7 +13,7 @@ public class MetricBuilder {
         ));
 
         metrics.addCustomChart(new SimplePie("proxy_mode", () -> {
-            String result = Config.getString("settings.proxy");
+            String result = BeacmcStaffWork.getMainConfig().getSettings().getString("proxy");
             return result != null ? result : "false";
         }));
     }

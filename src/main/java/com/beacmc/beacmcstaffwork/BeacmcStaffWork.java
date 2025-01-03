@@ -1,8 +1,12 @@
 package com.beacmc.beacmcstaffwork;
 
+import com.beacmc.beacmcstaffwork.action.BaseActionManager;
+import com.beacmc.beacmcstaffwork.action.creator.*;
 import com.beacmc.beacmcstaffwork.api.addon.AddonManager;
 import com.beacmc.beacmcstaffwork.command.staffmenu.StaffMenuCommand;
-import com.beacmc.beacmcstaffwork.util.action.*;
+import com.beacmc.beacmcstaffwork.config.MainConfiguration;
+import com.beacmc.beacmcstaffwork.config.NeedConfiguration;
+import com.beacmc.beacmcstaffwork.listener.WorkListener;
 import com.beacmc.beacmcstaffwork.api.action.ActionManager;
 import com.beacmc.beacmcstaffwork.command.admin.StaffAdminCommand;
 import com.beacmc.beacmcstaffwork.command.staffchat.StaffChatCommand;
@@ -18,17 +22,16 @@ import com.beacmc.beacmcstaffwork.listener.CommandListener;
 import com.beacmc.beacmcstaffwork.listener.MainListener;
 import com.beacmc.beacmcstaffwork.listener.PluginListener;
 import com.beacmc.beacmcstaffwork.util.metrics.MetricBuilder;
+import com.beacmc.beacmcstaffwork.warn.WarnManager;
 import com.beacmc.beacmcstaffwork.work.StaffWorkManager;
-import com.beacmc.beacmcstaffwork.player.StaffPlayer;
 import com.beacmc.beacmcstaffwork.hook.litebans.LiteBansHandler;
 import com.beacmc.beacmcstaffwork.util.UpdateChecker;
-import com.beacmc.beacmcstaffwork.config.Config;
-import com.beacmc.beacmcstaffwork.util.messaging.MessagingListener;
+import com.beacmc.beacmcstaffwork.listener.MessagingListener;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.messaging.Messenger;
 
-import java.util.*;
+import java.io.File;
 
 public final class BeacmcStaffWork extends JavaPlugin {
 
@@ -38,7 +41,9 @@ public final class BeacmcStaffWork extends JavaPlugin {
     private static Database database;
     private static ActionManager actionManager;
     private static StaffWorkManager staffWorkManager;
-    private static HashSet<StaffPlayer> users;
+    private static MainConfiguration mainConfig;
+    private static NeedConfiguration needConfiguration;
+    private static WarnManager warnManager;
     private static AddonManager addonManager;
 
 
@@ -54,17 +59,20 @@ public final class BeacmcStaffWork extends JavaPlugin {
             this.getServer().getPluginManager().disablePlugin(this);
         }
 
-        saveDefaultConfig();
+        this.reloadConfig();
+
         new LibraryManager(this);
-        users = new HashSet<>();
         Messenger messenger = this.getServer().getMessenger();
 
         instance = this;
         database = new Database();
         database.connect();
-        actionManager = new ActionManager();
 
+        warnManager = new WarnManager();
+
+        actionManager = new BaseActionManager();
         actionManager.registerActions(new ConsoleAction(), new PlayerAction(), new SoundAction(), new MessageToModeratosAction(), new MessageAction(), new BroadcastAction(), new ActionbarAction());
+
         staffWorkManager = new StaffWorkManager();
         UpdateChecker.startCheck();
 
@@ -75,7 +83,7 @@ public final class BeacmcStaffWork extends JavaPlugin {
         new StaffAdminCommand();
         new StaffChatCommand();
         new StaffMenuCommand();
-        if (Config.getBoolean("settings.discord.enable")) {
+        if (mainConfig.getDiscordSettings().getBoolean("enable")) {
             discordBot = new DiscordBot();
             discordBot.connect();
         }
@@ -83,7 +91,7 @@ public final class BeacmcStaffWork extends JavaPlugin {
         this.getCommand("staffwork").setTabCompleter(new StaffCompleter());
         this.getCommand("staffworkadmin").setTabCompleter(new StaffAdminCompleter());
 
-        if (Config.getBoolean("settings.proxy")) {
+        if (mainConfig.getSettings().getBoolean("proxy")) {
             messenger.registerIncomingPluginChannel(this, "BungeeCord", new MessagingListener());
             messenger.registerOutgoingPluginChannel(this, "BungeeCord");
         }
@@ -100,6 +108,7 @@ public final class BeacmcStaffWork extends JavaPlugin {
         addonManager.loadAddons();
 
         this.getServer().getPluginManager().registerEvents(new MainListener(), this);
+        this.getServer().getPluginManager().registerEvents(new WorkListener(), this);
         this.getServer().getPluginManager().registerEvents(new PluginListener(), this);
         this.getServer().getPluginManager().registerEvents(new CommandListener(), this);
 
@@ -142,8 +151,11 @@ public final class BeacmcStaffWork extends JavaPlugin {
 
     @Override
     public void reloadConfig() {
-        super.reloadConfig();
-        Config.reload();
+        saveDefaultConfig();
+        saveResource("need.yml", false);
+        saveResource("need_stats.yml", false);
+        mainConfig = new MainConfiguration(new File(getDataFolder(), "config.yml"));
+        needConfiguration = new NeedConfiguration(new File(getDataFolder(), "need.yml"));
     }
 
     public static AddonManager getAddonManager() {
@@ -154,6 +166,13 @@ public final class BeacmcStaffWork extends JavaPlugin {
         return staffWorkManager;
     }
 
+    public static NeedConfiguration getNeedConfiguration() {
+        return needConfiguration;
+    }
+
+    public static WarnManager getWarnManager() {
+        return warnManager;
+    }
 
     public static LuckPerms getLuckPerms() {
         return luckPerms;
@@ -163,8 +182,8 @@ public final class BeacmcStaffWork extends JavaPlugin {
         return discordBot;
     }
 
-    public static HashSet<StaffPlayer> getUsers() {
-        return users;
+    public static MainConfiguration getMainConfig() {
+        return mainConfig;
     }
 
     public static ActionManager getActionManager() {

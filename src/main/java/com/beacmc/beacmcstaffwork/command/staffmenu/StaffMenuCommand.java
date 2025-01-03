@@ -1,7 +1,7 @@
 package com.beacmc.beacmcstaffwork.command.staffmenu;
 
 import com.beacmc.beacmcstaffwork.api.command.Command;
-import com.beacmc.beacmcstaffwork.menu.StaffPanel;
+import com.beacmc.beacmcstaffwork.menu.stafflist.StaffListPanel;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -17,6 +17,6 @@ public class StaffMenuCommand extends Command {
             sender.sendMessage("Only player");
             return;
         }
-        new StaffPanel().open(((Player) sender));
+        new StaffListPanel().open(((Player) sender));
     }
 }

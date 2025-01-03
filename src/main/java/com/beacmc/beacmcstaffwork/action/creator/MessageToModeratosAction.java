@@ -1,11 +1,12 @@
-package com.beacmc.beacmcstaffwork.util.action;
+package com.beacmc.beacmcstaffwork.action.creator;
 
 import com.beacmc.beacmcstaffwork.api.action.Action;
-import com.beacmc.beacmcstaffwork.config.Config;
-import com.beacmc.beacmcstaffwork.util.Color;
 import com.beacmc.beacmcstaffwork.player.StaffPlayer;
+import com.beacmc.beacmcstaffwork.util.Message;
+import com.beacmc.beacmcstaffwork.util.Pair;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 public class MessageToModeratosAction implements Action {
@@ -22,16 +23,17 @@ public class MessageToModeratosAction implements Action {
     }
 
     @Override
-    public void execute(StaffPlayer player, String params) {
-        if(player.getPlayer() == null || params == null) return;
+    public void execute(OfflinePlayer player, String params, Pair<String, Object>... pairs) {
+        if (player == null) return;
 
-        params = PlaceholderAPI.setPlaceholders(player.getPlayer(), params);
+        if(!player.isOnline() || params == null)
+            return;
+
+        params = PlaceholderAPI.setPlaceholders(player, params);
 
         for (Player execute : Bukkit.getOnlinePlayers()) {
             if (execute.hasPermission("beacmcstaffwork.view")) {
-                execute.sendMessage(Color.compile(params)
-                        .replace("{PREFIX}", Config.getString("settings.prefix"))
-                );
+                execute.sendMessage(Message.of(params));
             }
         }
     }

@@ -1,22 +1,19 @@
 package com.beacmc.beacmcstaffwork.discord;
 
+import com.beacmc.beacmcstaffwork.BeacmcStaffWork;
+import com.beacmc.beacmcstaffwork.config.MainConfiguration;
 import com.beacmc.beacmcstaffwork.discord.command.creator.LinkCommand;
 import com.beacmc.beacmcstaffwork.discord.command.creator.StaffChatCommand;
 import com.beacmc.beacmcstaffwork.discord.command.creator.StatsCommand;
-import com.beacmc.beacmcstaffwork.config.Config;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.events.GenericEvent;
-import net.dv8tion.jda.api.events.session.ReadyEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.internal.utils.JDALogger;
-import org.jetbrains.annotations.NotNull;
+import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.Arrays;
-import java.util.EventListener;
 
 
 public class DiscordBot {
@@ -27,9 +24,12 @@ public class DiscordBot {
     public DiscordBot() {}
 
     public void connect() {
+        final MainConfiguration config = BeacmcStaffWork.getMainConfig();
+        final ConfigurationSection discordSettings = config.getDiscordSettings();
+
         try {
             JDALogger.setFallbackLoggerEnabled(false);
-            jda = JDABuilder.createDefault(Config.getString("settings.discord.token"))
+            jda = JDABuilder.createDefault(discordSettings.getString("token"))
                     .enableIntents(Arrays.asList(GatewayIntent.values()))
                     .build()
                     .awaitReady();
@@ -37,14 +37,14 @@ public class DiscordBot {
             e.printStackTrace();
         }
 
-        guild = jda.getGuildById(Config.getLong("settings.discord.guild-id"));
+        guild = jda.getGuildById(discordSettings.getLong("guild-id"));
 
-        if(Config.getBoolean("settings.discord.activity.enable")) {
+        if(discordSettings.getBoolean("activity.enable")) {
             jda.getPresence().setActivity(
                     Activity.of(
-                            Activity.ActivityType.valueOf(Config.getString("settings.discord.activity.type")),
-                            Config.getString("settings.discord.activity.text"),
-                            Config.getString("settings.discord.activity.url")
+                            Activity.ActivityType.valueOf(discordSettings.getString("activity.type", "PLAYING")),
+                            discordSettings.getString("activity.text", "beacmc"),
+                            discordSettings.getString("activity.url")
                     ));
         }
         new LinkCommand(jda);

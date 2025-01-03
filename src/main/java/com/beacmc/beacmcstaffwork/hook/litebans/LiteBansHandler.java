@@ -2,24 +2,24 @@ package com.beacmc.beacmcstaffwork.hook.litebans;
 
 
 import com.beacmc.beacmcstaffwork.BeacmcStaffWork;
-import com.beacmc.beacmcstaffwork.database.Database;
 import com.beacmc.beacmcstaffwork.database.dao.UserDao;
 import com.beacmc.beacmcstaffwork.database.model.User;
-import com.beacmc.beacmcstaffwork.config.Config;
 import com.beacmc.beacmcstaffwork.player.StaffPlayer;
+import com.beacmc.beacmcstaffwork.work.StaffWorkManager;
 import litebans.api.Entry;
 import litebans.api.Events;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-
-import java.sql.SQLException;
 
 public class LiteBansHandler {
 
     private final UserDao userDao;
+    private final StaffWorkManager manager;
 
     public LiteBansHandler() {
         userDao = BeacmcStaffWork.getDatabase().getUserDao();
+        manager = BeacmcStaffWork.getStaffWorkManager();
     }
 
     public void register() {
@@ -27,69 +27,74 @@ public class LiteBansHandler {
 
             @Override
             public void entryAdded(Entry entry) {
-                try {
-                    Player player = Bukkit.getPlayer(entry.getExecutorName());
+                final ConfigurationSection settings = BeacmcStaffWork.getMainConfig().getSettings();
+                final Player player = Bukkit.getPlayer(entry.getExecutorName());
 
-                    if (player == null)
-                        return;
+                if (player == null)
+                    return;
 
-                    StaffPlayer staffPlayer = new StaffPlayer(player);
-                    User user = staffPlayer.getUser();
+                StaffPlayer staffPlayer = manager.getStaffPlayerByPlayer(player);
+                if (staffPlayer == null)
+                    return;
 
-                    if (user == null)
-                        return;
+                User user = staffPlayer.getUser();
 
-                    if (!staffPlayer.isOnline() || (!staffPlayer.isWork() && Config.getBoolean("settings.required-work-on-add-statistic")))
-                        return;
+                if (user == null)
+                    return;
 
-                    switch (entry.getType()) {
-                        case "mute": {
-                            userDao.update(user.setMutes(user.getMutes() + 1));
-                            break;
-                        }
-                        case "ban": {
-                            userDao.update(user.setBans(user.getBans() + 1));
-                            break;
-                        }
-                        case "kick": {
-                            userDao.update(user.setKicks(user.getKicks() + 1));
-                            break;
-                        }
+                if (!staffPlayer.isOnline() || (!staffPlayer.isWork() && settings.getBoolean("required-work-on-add-statistic")))
+                    return;
+
+                switch (entry.getType()) {
+                    case "mute": {
+                        userDao.updateAsync(user.setMutes(user.getMutes() + 1));
+                        manager.updatePlayer(staffPlayer);
+                        break;
                     }
-                } catch (SQLException e) {
-                    e.printStackTrace();
+                    case "ban": {
+                        userDao.updateAsync(user.setBans(user.getBans() + 1));
+                        manager.updatePlayer(staffPlayer);
+                        break;
+                    }
+                    case "kick": {
+                        userDao.updateAsync(user.setKicks(user.getKicks() + 1));
+                        manager.updatePlayer(staffPlayer);
+                        break;
+                    }
                 }
             }
 
             @Override
             public void entryRemoved(Entry entry) {
-                try {
-                    Player player = Bukkit.getPlayer(entry.getExecutorName());
+                final ConfigurationSection settings = BeacmcStaffWork.getMainConfig().getSettings();
+                final Player player = Bukkit.getPlayer(entry.getExecutorName());
 
-                    if (player == null)
-                        return;
+                if (player == null)
+                    return;
 
-                    StaffPlayer staffPlayer = new StaffPlayer(player);
-                    User user = staffPlayer.getUser();
+                StaffPlayer staffPlayer = manager.getStaffPlayerByPlayer(player);
+                if (staffPlayer == null)
+                    return;
 
-                    if (user == null)
-                        return;
+                User user = staffPlayer.getUser();
 
-                    if (staffPlayer.isOnline() || (!staffPlayer.isWork() && Config.getBoolean("settings.required-work-on-add-statistic")))
-                        return;
+                if (user == null)
+                    return;
 
-                    switch (entry.getType()) {
-                        case "mute": {
-                            userDao.update(user.setUnmutes(user.getUnmutes() + 1));
-                            break;
-                        }
-                        case "ban": {
-                            userDao.update(user.setUnbans(user.getUnbans() + 1));
-                            break;
-                        }
+                if (staffPlayer.isOnline() || (!staffPlayer.isWork() && settings.getBoolean("required-work-on-add-statistic")))
+                    return;
+
+                switch (entry.getType()) {
+                    case "mute": {
+                        userDao.updateAsync(user.setUnmutes(user.getUnmutes() + 1));
+                        manager.updatePlayer(staffPlayer);
+                        break;
                     }
-                } catch (SQLException e) {
-                    e.printStackTrace();
+                    case "ban": {
+                        userDao.updateAsync(user.setUnbans(user.getUnbans() + 1));
+                        manager.updatePlayer(staffPlayer);
+                        break;
+                    }
                 }
             }
         });
