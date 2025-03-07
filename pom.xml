@@ -6,7 +6,7 @@
 
     <groupId>com.beacmc</groupId>
     <artifactId>BeacmcStaffWork</artifactId>
-    <version>v2.9.1-BETA</version>
+    <version>v2.9.2-BETA</version>
     <packaging>jar</packaging>
 
     <name>BeacmcStaffWork</name>
@@ -150,7 +150,7 @@
         <dependency>
             <groupId>net.md-5</groupId>
             <artifactId>bungeecord-chat</artifactId>
-            <version>1.20-R0.1</version>
+            <version>1.20-R0.2</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
