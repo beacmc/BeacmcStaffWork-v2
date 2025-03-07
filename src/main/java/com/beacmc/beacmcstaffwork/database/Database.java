@@ -3,9 +3,7 @@ package com.beacmc.beacmcstaffwork.database;
 import com.beacmc.beacmcstaffwork.BeacmcStaffWork;
 import com.beacmc.beacmcstaffwork.config.MainConfiguration;
 import com.beacmc.beacmcstaffwork.database.dao.UserDao;
-import com.beacmc.beacmcstaffwork.database.dao.WarnDao;
 import com.beacmc.beacmcstaffwork.database.dao.impl.UserDaoImpl;
-import com.beacmc.beacmcstaffwork.database.dao.impl.WarnDaoImpl;
 import com.beacmc.beacmcstaffwork.database.model.User;
 import com.j256.ormlite.field.FieldType;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
@@ -19,7 +17,6 @@ public class Database {
 
     private ConnectionSource connectionSource;
     private UserDao userDao;
-    private WarnDao warnDao;
 
     public Database() {}
 
@@ -33,7 +30,6 @@ public class Database {
             DatabaseType databaseType = DatabaseType.valueOf(config.getDatabaseSettings().getString("type", "SQLITE").toUpperCase());
             connectionSource = new JdbcConnectionSource(databaseType.getUrl(), config.getDatabaseSettings().getString("username"), config.getDatabaseSettings().getString("password"));
             userDao = new UserDaoImpl(connectionSource);
-            warnDao = new WarnDaoImpl(connectionSource);
             TableUtils.createTableIfNotExists(connectionSource, User.class);
 
             migrate();
@@ -66,10 +62,6 @@ public class Database {
 
     public UserDao getUserDao() {
         return userDao;
-    }
-
-    public WarnDao getWarnDao() {
-        return warnDao;
     }
 
     public ConnectionSource getConnectionSource() {

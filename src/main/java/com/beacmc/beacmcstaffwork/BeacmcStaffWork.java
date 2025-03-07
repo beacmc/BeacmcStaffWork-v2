@@ -5,7 +5,6 @@ import com.beacmc.beacmcstaffwork.action.creator.*;
 import com.beacmc.beacmcstaffwork.api.addon.AddonManager;
 import com.beacmc.beacmcstaffwork.command.staffmenu.StaffMenuCommand;
 import com.beacmc.beacmcstaffwork.config.MainConfiguration;
-import com.beacmc.beacmcstaffwork.config.NeedConfiguration;
 import com.beacmc.beacmcstaffwork.listener.WorkListener;
 import com.beacmc.beacmcstaffwork.api.action.ActionManager;
 import com.beacmc.beacmcstaffwork.command.admin.StaffAdminCommand;
@@ -22,7 +21,6 @@ import com.beacmc.beacmcstaffwork.listener.CommandListener;
 import com.beacmc.beacmcstaffwork.listener.MainListener;
 import com.beacmc.beacmcstaffwork.listener.PluginListener;
 import com.beacmc.beacmcstaffwork.util.metrics.MetricBuilder;
-import com.beacmc.beacmcstaffwork.warn.WarnManager;
 import com.beacmc.beacmcstaffwork.work.StaffWorkManager;
 import com.beacmc.beacmcstaffwork.hook.litebans.LiteBansHandler;
 import com.beacmc.beacmcstaffwork.util.UpdateChecker;
@@ -42,8 +40,6 @@ public final class BeacmcStaffWork extends JavaPlugin {
     private static ActionManager actionManager;
     private static StaffWorkManager staffWorkManager;
     private static MainConfiguration mainConfig;
-    private static NeedConfiguration needConfiguration;
-    private static WarnManager warnManager;
     private static AddonManager addonManager;
 
 
@@ -67,8 +63,6 @@ public final class BeacmcStaffWork extends JavaPlugin {
         instance = this;
         database = new Database();
         database.connect();
-
-        warnManager = new WarnManager();
 
         actionManager = new BaseActionManager();
         actionManager.registerActions(new ConsoleAction(), new PlayerAction(), new SoundAction(), new MessageToModeratosAction(), new MessageAction(), new BroadcastAction(), new ActionbarAction());
@@ -152,10 +146,7 @@ public final class BeacmcStaffWork extends JavaPlugin {
     @Override
     public void reloadConfig() {
         saveDefaultConfig();
-        saveResource("need.yml", false);
-        saveResource("need_stats.yml", false);
         mainConfig = new MainConfiguration(new File(getDataFolder(), "config.yml"));
-        needConfiguration = new NeedConfiguration(new File(getDataFolder(), "need.yml"));
     }
 
     public static AddonManager getAddonManager() {
@@ -165,15 +156,6 @@ public final class BeacmcStaffWork extends JavaPlugin {
     public static StaffWorkManager getStaffWorkManager() {
         return staffWorkManager;
     }
-
-    public static NeedConfiguration getNeedConfiguration() {
-        return needConfiguration;
-    }
-
-    public static WarnManager getWarnManager() {
-        return warnManager;
-    }
-
     public static LuckPerms getLuckPerms() {
         return luckPerms;
     }

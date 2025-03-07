@@ -19,7 +19,7 @@ public class ActionbarAction implements Action {
     }
 
     @Override
-    public void execute(OfflinePlayer player, String params, Pair<String, Object>... pairs) {
+    public final void execute(OfflinePlayer player, String params, Pair<String, Object>... pairs) {
         if (player != null && player.isOnline())
             player.getPlayer().sendActionBar(Color.compile(params));
     }
