@@ -21,7 +21,7 @@ public class Database {
     public Database() {}
 
     public void connect() {
-        if (connectionSource == null)
+        if (connectionSource != null)
             return;
 
         final MainConfiguration config = BeacmcStaffWork.getMainConfig();
