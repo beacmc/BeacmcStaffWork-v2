@@ -26,7 +26,7 @@ public class LinkCommand extends DiscordCommand {
             return;
         }
 
-        CompletableFuture<User> future = userDao.queryForIdAsync(args[0]);
+        CompletableFuture<User> future = userDao.queryForIdAsync(args[0].toLowerCase());
         future.thenAccept(user -> {
             long id;
             if (user == null) {
