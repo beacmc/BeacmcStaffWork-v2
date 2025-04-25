@@ -35,7 +35,7 @@ public class StaffCommand extends Command {
     public void execute(CommandSender sender, org.bukkit.command.Command command, String label, String[] args) {
         if (!(sender instanceof Player player)) return;
 
-        final StaffPlayer moderator = manager.getStaffPlayerByPlayer((Player) sender);
+        final StaffPlayer moderator = manager.getStaffPlayerByPlayer(player);
         final MainConfiguration config = BeacmcStaffWork.getMainConfig();
         final ConfigurationSection actions = config.getActions();
         final ConfigurationSection messages = config.getMessages();
@@ -78,7 +78,7 @@ public class StaffCommand extends Command {
             }
             return;
         }
-        if(args.length == 1 && args[0].equalsIgnoreCase("stats")) {
+        if (args.length == 1 && args[0].equalsIgnoreCase("stats")) {
             List<String> lines = messages.getStringList("stats").stream()
                     .map(line -> Message.of(PlaceholderAPI.setPlaceholders(moderator.getPlayer(), line)))
                     .toList();
