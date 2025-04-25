@@ -8,13 +8,14 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class StaffCompleter implements TabCompleter {
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
-        return args.length == 1 ? List.of("stats").stream().filter((category) -> {
-            return category.toLowerCase().startsWith(args[0].toLowerCase());
-        }).collect(Collectors.toList()) : null;
+        return args.length == 1 ? Stream.of("stats")
+                .filter(category -> category.toLowerCase().startsWith(args[0].toLowerCase()))
+                .collect(Collectors.toList()) : null;
     }
 }
