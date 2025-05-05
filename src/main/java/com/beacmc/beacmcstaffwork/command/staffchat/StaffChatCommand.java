@@ -54,19 +54,15 @@ public class StaffChatCommand extends Command {
         }
 
         final boolean isBroadcast = Arrays.asList(args).contains("-bc");
-
-        final String messageKey = isBroadcast && user.hasPermission("beacmcstaffwork.chat.broadcast")
-                ? "chat-broadcast-format"
-                : "chat-format";
-        final String messageTemplate = settings.getString(messageKey);
+        final String messageKey = isBroadcast && user.hasPermission("beacmcstaffwork.chat.broadcast") ? "chat-broadcast-format" : "chat-format";
+        final String messageTemplate = settings.getString(messageKey, "ERROR");
 
         args = Arrays.stream(args)
                 .filter(arg -> !"-bc".equals(arg))
                 .toArray(String[]::new);
 
-        String message = String.join(" ", args);
-
-        final String format = Message.of(PlaceholderAPI.setPlaceholders(user.getPlayer(), messageTemplate));
+        final String message = String.join(" ", args);
+        final String format = Message.of(PlaceholderAPI.setPlaceholders(user.getPlayer(), messageTemplate.replace("{MESSAGE}", message)));
 
         sendPluginMessage(user.getPlayer(), format);
         Bukkit.getOnlinePlayers().stream()

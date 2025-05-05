@@ -28,6 +28,7 @@ import com.beacmc.beacmcstaffwork.listener.MessagingListener;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.messaging.Messenger;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 
@@ -168,6 +169,7 @@ public final class BeacmcStaffWork extends JavaPlugin {
         return mainConfig;
     }
 
+    @NotNull
     public static ActionManager getActionManager() {
         return actionManager;
     }

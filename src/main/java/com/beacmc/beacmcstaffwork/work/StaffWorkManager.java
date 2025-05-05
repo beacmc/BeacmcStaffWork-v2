@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
@@ -28,19 +29,19 @@ public class StaffWorkManager {
     }
 
     public void onJoin(Player player) {
-        StaffPlayer staffPlayer = findStaffPlayer(player);
-        if(staffPlayer != null)
-            staffPlayers.add(staffPlayer);
+        findStaffPlayer(player).thenAccept(staffPlayer -> {
+            if (staffPlayer != null) staffPlayers.add(staffPlayer);
+        });
     }
 
     public void onLeave(Player player) {
         final ConfigurationSection workLimitsSettings = BeacmcStaffWork.getMainConfig().getWorkLimitsSettings();
         final ConfigurationSection actions = BeacmcStaffWork.getMainConfig().getActions();
 
-        if(!workLimitsSettings.getBoolean("disable-work-on-quit"))
+        if (!workLimitsSettings.getBoolean("disable-work-on-quit"))
             return;
 
-        if(workLimitsSettings.getBoolean("enable-bypass-permission") && player.hasPermission("beacmcstaffwork.work-limits.bypass"))
+        if (workLimitsSettings.getBoolean("enable-bypass-permission") && player.hasPermission("beacmcstaffwork.work-limits.bypass"))
             return;
 
         if (isWork(player)) {
@@ -60,7 +61,7 @@ public class StaffWorkManager {
 
     public StaffPlayer getStaffPlayerByPlayer(Player player) {
         return player == null ? null : staffPlayers.stream()
-                .filter(staffPlayer -> staffPlayer.getName().equals(player.getName()))
+                .filter(staffPlayer -> staffPlayer.getName().equalsIgnoreCase(player.getName()))
                 .findFirst()
                 .orElse(null);
     }
@@ -78,16 +79,14 @@ public class StaffWorkManager {
         }
     }
 
-    public StaffPlayer findStaffPlayer(Player player) {
-        try {
-            User user = userDao.queryForIdAsync(player.getName().toLowerCase()).get();
-            if (user == null || !player.isOnline())
-                return null;
-
-            return new StaffPlayer(player, user);
-        } catch (ExecutionException | InterruptedException ignored) {
-        }
-        return null;
+    public CompletableFuture<StaffPlayer> findStaffPlayer(Player player) {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                User user = userDao.queryForIdAsync(player.getName().toLowerCase()).get();
+                return user != null ? new StaffPlayer(player, user) : new StaffPlayer(player, null);
+            } catch (InterruptedException | ExecutionException ignored) { }
+            return new StaffPlayer(player, null);
+        });
     }
 
     public boolean isOnline(Player player) {

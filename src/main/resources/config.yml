@@ -186,14 +186,6 @@ settings:
       author-name: ""
       author-icon-url: ""
 
-  warns:
-    verbal:
-      display-name: "Устный выговор"
-      max: 2
-    severe:
-      display-name: "Строгий выговор"
-      max: 3
-
   menu:
     title: "&0&l> &8Люди которые работают в данный момент"
     size: 54

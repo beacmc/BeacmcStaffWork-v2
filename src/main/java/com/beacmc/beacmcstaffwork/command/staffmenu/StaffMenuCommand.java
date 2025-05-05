@@ -13,10 +13,10 @@ public class StaffMenuCommand extends Command {
 
     @Override
     public void execute(CommandSender sender, org.bukkit.command.Command command, String label, String[] args) {
-        if (!(sender instanceof Player)) {
+        if (!(sender instanceof Player player)) {
             sender.sendMessage("Only player");
             return;
         }
-        new StaffListPanel().open(((Player) sender));
+        new StaffListPanel().open(player);
     }
 }
