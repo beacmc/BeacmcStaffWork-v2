@@ -5,6 +5,8 @@ import com.beacmc.beacmcstaffwork.api.action.ActionManager;
 import com.beacmc.beacmcstaffwork.api.event.PlayerDisableWorkEvent;
 import com.beacmc.beacmcstaffwork.api.event.PlayerEnableWorkEvent;
 import com.beacmc.beacmcstaffwork.config.MainConfiguration;
+import com.beacmc.beacmcstaffwork.database.dao.UserDao;
+import com.beacmc.beacmcstaffwork.database.model.User;
 import com.beacmc.beacmcstaffwork.util.Message;
 import com.beacmc.beacmcstaffwork.work.StaffWorkManager;
 import com.beacmc.beacmcstaffwork.api.command.Command;
@@ -17,6 +19,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 
 public class StaffCommand extends Command {
@@ -24,38 +27,53 @@ public class StaffCommand extends Command {
     private final LuckPerms luckPerms;
     private final StaffWorkManager manager;
     private final ActionManager action;
+    private final UserDao userDao;
 
     public StaffCommand() {
         super("staffwork");
         luckPerms = BeacmcStaffWork.getLuckPerms();
         manager = BeacmcStaffWork.getStaffWorkManager();
         action = BeacmcStaffWork.getActionManager();
+        userDao = BeacmcStaffWork.getDatabase().getUserDao();
     }
 
     public void execute(CommandSender sender, org.bukkit.command.Command command, String label, String[] args) {
         if (!(sender instanceof Player player)) return;
 
-        final StaffPlayer moderator = manager.getStaffPlayerByPlayer(player);
         final MainConfiguration config = BeacmcStaffWork.getMainConfig();
         final ConfigurationSection actions = config.getActions();
         final ConfigurationSection messages = config.getMessages();
 
-        if (moderator == null) {
-            player.sendMessage(Message.getMessageFromConfig("staff-player-not-found"));
+        StaffPlayer moderator = manager.getStaffPlayerByPlayer(player);
+
+        if (!player.hasPermission("beacmcstaffwork.use")) {
+            player.sendMessage(Message.getMessageFromConfig("no-permission"));
             return;
         }
 
-        if (!moderator.hasPermission("beacmcstaffwork.use")) {
-            moderator.sendMessage("settings.messages.no-permission");
-            return;
+        if (moderator == null) {
+            try {
+                StaffPlayer staffPlayer = manager.findStaffPlayer(player).get();
+                if (!staffPlayer.isModerator()) {
+                    User user = new User(player.getName().toLowerCase(), null, true, 0, 0, 0, 0, 0, 0, 0, 0);
+                    staffPlayer = new StaffPlayer(player, user);
+                    userDao.createOrUpdateAsync(user);
+                }
+                manager.getStaffPlayers().add(staffPlayer);
+            } catch (InterruptedException | ExecutionException ignored) { }
         }
 
         if (args.length == 0) {
+            if (moderator == null) {
+                player.sendMessage(Message.getMessageFromConfig("staff-player-not-found"));
+                return;
+            }
 
             if (actions.getString(moderator.getPrimaryGroup()) == null) {
                 moderator.sendMessage(Message.getMessageFromConfig("no-group"));
                 return;
             }
+
             if(moderator.isWork()) {
                 PlayerDisableWorkEvent event = new PlayerDisableWorkEvent(moderator);
                 Bukkit.getPluginManager().callEvent(event);
@@ -78,9 +96,11 @@ public class StaffCommand extends Command {
             }
             return;
         }
+
+        final StaffPlayer finalModerator = moderator;
         if (args.length == 1 && args[0].equalsIgnoreCase("stats")) {
             List<String> lines = messages.getStringList("stats").stream()
-                    .map(line -> Message.of(PlaceholderAPI.setPlaceholders(moderator.getPlayer(), line)))
+                    .map(line -> Message.of(PlaceholderAPI.setPlaceholders(finalModerator.getPlayer(), line)))
                     .toList();
             moderator.sendMessage(lines);
             return;
