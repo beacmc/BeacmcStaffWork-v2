@@ -57,6 +57,7 @@ public class StaffCommand extends Command {
                 if (!staffPlayer.isModerator()) {
                     User user = new User(player.getName().toLowerCase(), null, true, 0, 0, 0, 0, 0, 0, 0, 0);
                     staffPlayer = new StaffPlayer(player, user);
+                    moderator = staffPlayer;
                     userDao.createOrUpdateAsync(user);
                 }
                 manager.getStaffPlayers().add(staffPlayer);
