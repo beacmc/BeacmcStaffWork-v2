@@ -32,11 +32,11 @@ public class StaffPlayer {
     }
 
     public boolean isWork() {
-        return user.isWork() && isModerator();
+        return user != null && user.isWork();
     }
 
     public String getIPAddress() {
-        return player.getAddress() != null ? player.getAddress().getHostName() : null;
+        return player.getAddress() != null ? player.getAddress().getAddress().getHostAddress() : null;
     }
 
     public void stopWork() {
