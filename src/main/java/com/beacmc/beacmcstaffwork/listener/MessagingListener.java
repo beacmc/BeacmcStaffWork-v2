@@ -11,7 +11,7 @@ public class MessagingListener implements PluginMessageListener {
 
 
     @Override
-    public void onPluginMessageReceived(@NotNull String channel, @NotNull Player player, @NotNull byte[] message) {
+    public void onPluginMessageReceived(@NotNull String channel, @NotNull Player player, byte[] message) {
         ByteArrayDataInput arrayInput = ByteStreams.newDataInput(message);
 
         String sub = arrayInput.readUTF();
