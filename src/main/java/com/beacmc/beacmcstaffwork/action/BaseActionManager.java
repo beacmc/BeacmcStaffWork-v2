@@ -43,7 +43,7 @@ public class BaseActionManager implements ActionManager {
     }
 
     public void unregisterAllActions() {
-        for (Action action : registerActions) unregisterAction(action);
+        registerActions.clear();
     }
 
     public boolean isRegisterAction(Action action) {
