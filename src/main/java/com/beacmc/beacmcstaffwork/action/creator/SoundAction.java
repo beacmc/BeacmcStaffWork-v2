@@ -10,7 +10,6 @@ import org.bukkit.entity.Player;
 
 public class SoundAction implements Action {
 
-
     @Override
     public String getName() {
         return "[sound]";
