@@ -38,8 +38,6 @@ public class Database {
         }
     }
 
-
-
     private boolean columnExists(String columnName) {
         final TableInfo<User, String> tableInfo = userDao.getTableInfo();
         final FieldType[] types = tableInfo.getFieldTypes();

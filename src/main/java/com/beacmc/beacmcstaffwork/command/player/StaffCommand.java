@@ -53,15 +53,16 @@ public class StaffCommand extends Command {
 
         if (moderator == null) {
             try {
-                StaffPlayer staffPlayer = manager.findStaffPlayer(player).get();
-                if (!staffPlayer.isModerator()) {
+                moderator = manager.findStaffPlayer(player).get();
+                if (!moderator.isModerator()) {
                     User user = new User(player.getName().toLowerCase(), null, true, 0, 0, 0, 0, 0, 0, 0, 0);
-                    staffPlayer = new StaffPlayer(player, user);
-                    moderator = staffPlayer;
+                    moderator = new StaffPlayer(player, user);
                     userDao.createOrUpdateAsync(user);
                 }
-                manager.getStaffPlayers().add(staffPlayer);
-            } catch (InterruptedException | ExecutionException ignored) { }
+                manager.getStaffPlayers().add(moderator);
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
         }
 
         if (args.length == 0) {

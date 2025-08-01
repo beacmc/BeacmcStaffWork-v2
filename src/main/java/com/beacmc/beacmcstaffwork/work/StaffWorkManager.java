@@ -83,7 +83,7 @@ public class StaffWorkManager {
         return CompletableFuture.supplyAsync(() -> {
             try {
                 User user = userDao.queryForIdAsync(player.getName().toLowerCase()).get();
-                return user != null ? new StaffPlayer(player, user) : new StaffPlayer(player, null);
+                return new StaffPlayer(player, user);
             } catch (InterruptedException | ExecutionException ignored) { }
             return new StaffPlayer(player, null);
         });
