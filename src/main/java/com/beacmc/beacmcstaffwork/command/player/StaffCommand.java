@@ -107,7 +107,7 @@ public class StaffCommand extends Command {
             moderator.sendMessage(lines);
             return;
         }
-        List<String> lines = messages.getStringList("stats").stream()
+        List<String> lines = messages.getStringList("help").stream()
                 .map(Message::of)
                 .toList();
         moderator.sendMessage(lines);
